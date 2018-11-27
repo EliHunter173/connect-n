@@ -5,19 +5,19 @@
 
 ## Functional Requirements
 
-* **Formal:** The (stakeholder type) shall [not] be able to (function type).
-* **Shorthand:** [not]  (function type).
+* **Formal:** The (stakeholder type) shall [not] be able to (function/capability).
+* **Shorthand:** [not]  (function/capability).
   > Header shows stakeholder type.
 
 ### System
 
 * NOT Remove tokens.
-* Check if n tokens of the same type are in a row upon the placement of a token.
-* Declare a winner if n tokens of the same type are in a line, horizontally, vertically, or diagonally.
+* Check if `n` tokens of the same type are in a row upon the placement of a token.
+* Declare a winner if `n` tokens of the same type are in a line, horizontally, vertically, or diagonally.
 * NOT Add a token outside of bounds.
 * Add a token of any type to the lowest non-filled row.
 * Set a arbitrary board size at the beginning.
-* NOT Set board size below n in any direction.
+* NOT Set board size below `n` in any direction.
 * NOT Change board size during the game.
 * Upon completion of game, display winner and ask if player would like to play again.
 
