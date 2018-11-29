@@ -1,3 +1,4 @@
+// TODO: This is somewhat deprecated. Reimplement it as the design document states
 public class GameBoard {
 
     private static final int MIN_TOKENS_TO_CONNECT = 1;

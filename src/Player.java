@@ -1,30 +1,42 @@
 public class Player {
 
-    public static int numberOfPlayers = 0;
+    public static int idCounter = 0;
 
+    private GameBoard game;
     private int id;
     private String name;
+    private boolean isAI;
 
-    public Player() {
-        this.id = ++numberOfPlayers;
+    public Player(GameBoard game) {
+        this.game = game;
+        this.id = ++idCounter;
         this.name = "Player " + id;
+        this.boolean = true;
     }
 
-    public Player(String name) {
-        this.id = ++numberOfPlayers;
+    public Player(GameBoard game, String name) {
+        this.game = game;
+        this.id = ++idCounter;
         this.name = name;
-    }
-
-    public static int getNumberOfPlayers() {
-        return numberOfPlayers;
-    }
-
-    public int getId() {
-        return id;
+        this.boolean = false;
     }
 
     public String getName() {
         return name;
+    }
+
+    public boolean equals(Object other) {
+        if (other instanceof Player) {
+            Player otherPlayer = (Player) other;
+            return this.id == other.id;
+
+        } else {
+            return false;
+        }
+    }
+
+    public int decideColumn() {
+        // TODO: Implement me! At first, just do a random number generator, then be fancy.
     }
 
 }
