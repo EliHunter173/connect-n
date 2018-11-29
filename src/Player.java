@@ -1,3 +1,4 @@
+// TODO: This is somewhat deprecated. Reimplement it as the design document states.
 public class Player {
 
     public static int idCounter = 0;

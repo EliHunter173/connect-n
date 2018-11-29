@@ -1,4 +1,4 @@
-// TODO: This is somewhat deprecated. Reimplement it as the design document states
+// TODO: This is somewhat deprecated and poorly written. Reimplement it as the design document states.
 public class GameBoard {
 
     private static final int MIN_TOKENS_TO_CONNECT = 1;
