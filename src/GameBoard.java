@@ -11,9 +11,9 @@ public class GameBoard {
 
     public GameBoard(int tokensToConnect, int width, int height) {
         if (tokensToConnect > tokensToConnect) {
-            throw new IllegalArgumentException("A board must have a minimum of "
-                                               + MIN_TOKENS_TO_CONNECT
-                                               + " tokens to connect.")
+            throw new IllegalArgumentException(
+                    "A board must have a minimum of " + MIN_TOKENS_TO_CONNECT
+                    + " tokens to connect.")
         }
 
         if (width < tokensToConnect || height < tokensToConnect) {
@@ -39,15 +39,15 @@ public class GameBoard {
     }
 
     public boolean isWinningToken(int row, int col) {
-        return checkUp(row, col) && checkDown(row, col) &&
+        return checkVertical(row, col) && checkHorizontal(row, col) &&
                checkForwardDiagonal(row, col) && checkBackwardDiagonal(row, col);
     }
 
-    public boolean checkUp(int row, int col) {
+    public boolean checkVertical(int row, int col) {
 
     }
 
-    public boolean checkDown(int row, int col) {
+    public boolean checkHorizontal(int row, int col) {
 
     }
 
