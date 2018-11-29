@@ -57,7 +57,7 @@ sense to do after every time a token is added.
 * `-checkForwardDiagonal(row: int, col: int)`: `boolean`
 
 ## GameInterface
-The `GameInterface` is an interface that must have a specific implementation.
+The game interface is an interface that must have a specific implementation.
 This interface is responsible for displaying the game board to the user.
 This interface also collects all user input required by the game controller.
 ## Attributes
@@ -68,12 +68,10 @@ This interface also collects all user input required by the game controller.
 * `-displayBoard()`: `void`
 
 ## GameController
-The `GameController` is an interface that must have a specific implementation.
-This interface is responsible for modifying the game board by adding tokens.
-This interface also keeps track of all current players and uses that information
-to "take a turn" for a player by either deciding their move, for computer-controlled
-players, or requesting user input from the game interface for human-controlled
-players.
+This game controller is responsible for modifying the game board by adding tokens.
+It also keeps track of all current players and uses that information to "take a turn"
+for a player by either deciding their move, for computer-controlled players, or
+requesting user input from the game interface for human-controlled players.
 ## Attributes
 * `-interface`: `GameInterface`
 * `-game`: `GameBoard`
