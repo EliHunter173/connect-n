@@ -1,6 +1,7 @@
-# Class Diagrams
-
-These are all the classes required to make the Connect-N program work.
+# Design
+This document details the implementation of all current classes and thier methods.
+The constructors for each class are left out as they are not the primary scope
+of this document and will be largely standard in terms of initializing all fields.
 
 ## Token
 This identifies a single token, which must be owned by a player.
