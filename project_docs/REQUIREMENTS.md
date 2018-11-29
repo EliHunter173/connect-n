@@ -1,4 +1,4 @@
-# Comprehensive Exercise Requirements
+# Requirements
 
 * **Goal:** Connect N (AKA. Connect Four except it can be any number)
 * **Stakeholders:** System, Player
@@ -33,20 +33,22 @@
 
 ## User Stories
 
-* Upon executing a program, the number of players is requested, the board size is requested, and the number of tokens to connect is requested. The game starts, showing an empty board of the specified size displaying the current player.
+#### 1. Upon executing a program, the number of players is requested, the board size is requested, and the number of tokens to connect is requested. The game starts, showing an empty board of the specified size displaying the current player.
 
-* A player is prompted to add a token and chooses a column...
-  * If that column exists and is not full, the system successfully adds a token of their type to that column at the lowest non-filled row in that column.
-  * If that column exists but is full, the system displays a message stating that a token cannot be added to a full column and that same player is reprompted to add another token.
-  * If that column does not exist, the system displays a message stating that a token can only be added to columns which exists and that same player is reprompted to add another token.
+#### 2. A player is prompted to add a token and chooses a column...
+* If that column exists and is not full, the system successfully adds a token of their type to that column at the lowest non-filled row in that column.
+* If that column exists but is full, the system displays a message stating that a token cannot be added to a full column and that same player is reprompted to add another token.
+* If that column does not exist, the system displays a message stating that a token can only be added to columns which exists and that same player is reprompted to add another token.
 
-* A player just successfully placed a token on the board, the updated board is displayed and the next player is prompted for a token...
-  * If the player is not the last numerical player, the player that is 1 above the current player is the next player.
-  * If the player is the last numerical player, the player 1 is the next player.
+#### 3. A player just successfully placed a token on the board, the updated board is displayed and the next player is prompted for a token...
+* If the player is not the last numerical player, the player that is 1 above the current player is the next player.
+* If the player is the last numerical player, the player 1 is the next player.
 
-* A player wins by getting the specified number of tokens in a row. A win screen is displayed. On that screen, the name of the player is displayed and there are 3 options displayed: quitting, playing again with different settings, and playing again with the same settings.
-* The board is completely filled. However, no player has managed to connect the required number of pieces. A game over screen is displayed. On that screen, there are 3 options displayed: quitting, playing again with different settings, and playing again with the same settings.
+#### 4. An end condition is met...
+* A player won by getting the specified number of tokens in a row. A win screen is displayed. On that screen, the name of the player is displayed and there are 3 options displayed: quitting, playing again with different settings, and playing again with the same settings.
+* The board was completely filled. However, no player managed to connect the required number of pieces. A game over screen is displayed. On that screen, there are 3 options displayed: quitting, playing again with different settings, and playing again with the same settings.
 
-* If the players request to quit the game, the program exits and closes whatever windows it opened.
-* If the players request to replay the game with different settings, the program requests all that it did to start the program. The board is then begun as an empty board with the specified settings.
-* If the players request to replay the game with the same settings, the program retains all the settings it had with the last board. The board is then begun as an empty board with the specified settings.
+#### 5. The players choose an option on the end screen...
+* If the players chose to quit the game, the program exits and closes whatever windows it opened.
+* If the players chose to replay the game with different settings, the program requests all that it did to start the program. The board is then begun as an empty board with the specified settings.
+* If the players chose to replay the game with the same settings, the program retains all the settings it had with the last board. The board is then begun as an empty board with the specified settings.
