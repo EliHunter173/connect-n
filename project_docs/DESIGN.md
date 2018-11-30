@@ -18,9 +18,10 @@ the user.
 ### Attributes
 * `-name`: `String`
 * `-id`: `int`
-* `-isHuman`: `boolean`
+* `-playerType`: `byte` (defined with class constants, not actual bytes)
 ### Methods
 * `+getName()`: `String`
+* `+getPlayerType`: `byte`
 * `+equals(other: Object)`: `boolean`
 
 ## Column
@@ -31,8 +32,9 @@ kept track of to simplify this process. An empty position is signified by a
 ### Attributes
 * `-tokens`: `Token[]`
 * `-numberOfTokens`: `int`
-* `-height`: `int`
+* `-maxTokens`: `int`
 ### Methods
+* `+getMaxTokens()`: `int`
 * `+getToken(row: int)`: `Token`
 * `+addToken(token: Token)`: `void`
 
@@ -43,29 +45,36 @@ whether or not a positition is a "winning position," by calling on four methods
 in any direction. This can be done at any time by the controller, but makes most
 sense to do after every time a token is added.
 ### Attributes
-* `-board`: `Column[]`
+* `-columns`: `Column[]`
 * `-width`: `int`
+* `-height`: `int`
 * `-tokensToConnect`: `int`
 * `-MIN_TOKENS_TO_CONNECT`: `int`
 * `-MAX_TOKENS_TO_CONNECT`: `int`
 ### Methods
+* `+getWidth()`: `int`
+* `+getHeight()`: `int`
+* `+getTokensToConnect()`: `int`
+* `+getToken(row: int, col: int)`: `Token`
 * `+addToken(token: Token, col: int)`: `void`
 * `+isWinningPosition(row: int, col: int)`: `boolean`
 * `-checkVertical(row: int, col: int)`: `boolean`
 * `-checkHorizontal(row: int, col: int)`: `boolean`
-* `-checkBackwardDiagonal(row: int, col: int)`: `boolean`
 * `-checkForwardDiagonal(row: int, col: int)`: `boolean`
+* `-checkBackwardDiagonal(row: int, col: int)`: `boolean`
 
 ## GameInterface
 The game interface is an interface that must have a specific implementation.
 This interface is responsible for displaying the game board to the user.
 This interface also collects all user input required by the game controller.
 ## Attributes
-* `-controller`: `Controller`
+* `-controller`: `GameController`
 * `-game`: `GameBoard`
 ### Methods
-* `-requestUserInput()`: `int`
+* `+setController()`: `void`
+* `+requestUserInput()`: `String`
 * `-displayBoard()`: `void`
+* `-requstPlayers()`: `Player[]`
 
 ## GameController
 This game controller is responsible for modifying the game board by adding tokens.
@@ -77,5 +86,14 @@ requesting user input from the game interface for human-controlled players.
 * `-game`: `GameBoard`
 * `-players`: `Player[]`
 ### Methods
-* `-takeTurn()`: `void`
-* `-decideColumn(player Player)`: `int`
+* `+getCurrentPlayer()`: `Player`
+* `+setInterface(interface: GameInterface)`: `void`
+* `+takeTurn()`: `void`
+
+## AI
+This interface is simply full of static methods that are used by the controller (or
+really anything) to control how the AI plays.
+This interface is separated from the core GameController class so the AI is more
+plug and play.
+### Methods
+* `+decideColumn(player: Player, board: GameBoard)`: `int`

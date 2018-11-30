@@ -1,8 +1,14 @@
 public interface GameInterface {
 
+    private GameController controller;
     private GameBoard game;
 
-    public void takeTurn(Player player);
-    public int requestUserInput();
-    public void displayBoard();
+    public void setController();
+
+    public String requestUserInput();
+
+    private void displayBoard();
+
+    private Player[] requestPlayers();
+
 }

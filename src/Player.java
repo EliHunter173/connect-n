@@ -1,43 +1,25 @@
-// TODO: This is somewhat deprecated. Reimplement it as the design document states.
 public class Player {
 
-    public static int idCounter = 0;
+    private static int idCounter = 0;
 
-    private GameBoard game;
-    private int id;
-    private String name;
-    private boolean isAI;
+    // These constants define various player types.
+    public static final byte HUMAN = null;
+    public static final byte RANDOM_AI = 0;
 
-    public Player(GameBoard game) {
-        this.game = game;
-        this.id = ++idCounter;
-        this.name = "Player " + id;
-        this.boolean = true;
-    }
+    private final String name;
+    private final int id;
+    private byte playerType; // Note: This is not final so we can make a player an AI if they forfeit
 
-    public Player(GameBoard game, String name) {
-        this.game = game;
-        this.id = ++idCounter;
-        this.name = name;
-        this.boolean = false;
+    public byte getPlayerType() {
+
     }
 
     public String getName() {
-        return name;
+
     }
 
     public boolean equals(Object other) {
-        if (other instanceof Player) {
-            Player otherPlayer = (Player) other;
-            return this.id == other.id;
 
-        } else {
-            return false;
-        }
-    }
-
-    public int decideColumn() {
-        // TODO: Implement me! At first, just do a random number generator, then be fancy.
     }
 
 }
