@@ -3,14 +3,6 @@ This document details the implementation of all current classes and thier method
 The constructors for each class are left out as they are not the primary scope
 of this document and will be largely standard in terms of initializing all fields.
 
-## Token
-This identifies a single token, which must be owned by a player.
-### Attributes
-* `-owner`: `Player`
-### Methods
-* `+getOwner()`: `Player`
-* `+equals(other: Object)`: `boolean`
-
 ## Player
 A player can either be human-controller or computer-controlled, which is used
 to determine whether the controller will make a move or will request a move from
@@ -22,6 +14,14 @@ the user.
 ### Methods
 * `+getName()`: `String`
 * `+getPlayerType`: `byte`
+* `+equals(other: Object)`: `boolean`
+
+## Token
+This identifies a single token, which must be owned by a player.
+### Attributes
+* `-owner`: `Player`
+### Methods
+* `+getOwner()`: `Player`
 * `+equals(other: Object)`: `boolean`
 
 ## Column
