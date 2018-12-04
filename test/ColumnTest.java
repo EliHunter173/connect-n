@@ -28,12 +28,12 @@ public class ColumnTest extends TestCase {
     }
 
     @Test
-    public void testConstants() {
+    public void testGetMaxTokens() {
         assertEquals("Column's maxTokens", COLUMN_HEIGHT, column.getMaxTokens());
     }
 
     @Test
-    public void testAddToken() {
+    public void testAddTokenAndGetToken() {
         column.addToken(new Token(alice));
         column.addToken(new Token(cyborg));
         column.addToken(new Token(alice));
@@ -43,11 +43,35 @@ public class ColumnTest extends TestCase {
     }
 
     @Test
-    public void testEquals() {
-        assertFalse("Alice's token with Cyborg's Token", aliceToken.equals(cyborgToken));
-        assertTrue("Alice's token with another one of her tokens",
-                aliceToken.equals(new Token(alice)));
-        assertTrue("Cyborg's token with Cyborg's Token", cyborgToken.equals(cyborgToken));
+    public void testAddTokenError() {
+        column.addToken(new Token(alice));
+        column.addToken(new Token(alice));
+        column.addToken(new Token(alice));
+        column.addToken(new Token(alice));
+        try {
+            column.addToken(new Token(alice));
+            fail(); // The test failed/was incomplete
+        } catch (IllegalArgumentException e) {
+            assertEquals("Correct add token error message",
+                    "Column is full", e.getMessage());
+        }
     }
 
+    @Test
+    public void testGetTokenError() {
+        try {
+            column.getToken(-1);
+            fail(); // The test failed/was incomplete
+        } catch (IllegalArgumentException e) {
+            assertEquals("Correct get token error message",
+                    "Invalid row", e.getMessage());
+        }
+        try {
+            column.getToken(5);
+            fail(); // The test failed/was incomplete
+        } catch (IllegalArgumentException e) {
+            assertEquals("Correct get token error message",
+                    "Invalid row", e.getMessage());
+        }
+    }
 }
