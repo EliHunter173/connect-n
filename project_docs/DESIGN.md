@@ -12,6 +12,7 @@ the user.
 * `-id`: `int`
 * `-playerType`: `byte` (defined with class constants, not actual bytes)
 ### Methods
+* `+resetCounter()`: `void`
 * `+getName()`: `String`
 * `+getPlayerType`: `byte`
 * `+equals(other: Object)`: `boolean`
