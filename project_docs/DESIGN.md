@@ -50,6 +50,8 @@ sense to do after every time a token is added.
 * `-width`: `int`
 * `-height`: `int`
 * `-tokensToConnect`: `int`
+* `-MAX_WIDTH`: `int`
+* `-MAX_HEIGHT`: `int`
 * `-MIN_TOKENS_TO_CONNECT`: `int`
 * `-MAX_TOKENS_TO_CONNECT`: `int`
 ### Methods
