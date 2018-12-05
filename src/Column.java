@@ -28,4 +28,10 @@ public class Column {
         tokens[numberOfTokens++] = token;
     }
 
+    public void empty() {
+        for (int i = 0; i < tokens.length; i++) {
+            tokens[i] = Token.EMPTY;
+        }
+    }
+
 }
