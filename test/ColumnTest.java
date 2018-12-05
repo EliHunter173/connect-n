@@ -16,6 +16,10 @@ public class ColumnTest extends TestCase {
     private Player alice;
     /** Player Cyborg for testing */
     private Player cyborg;
+    /** Alice's Token for testing */
+    private Token aliceToken;
+    /** Cyborg's Token for testing */
+    private Token cyborgToken;
     /** Testing Column for holding tokens created from Player objects */
     private Column column;
 
@@ -24,6 +28,8 @@ public class ColumnTest extends TestCase {
         Player.resetCounter();
         alice = new Player("Alice", Player.HUMAN);
         cyborg = new Player("Cyborg", Player.RANDOM_AI);
+        aliceToken = new Token(alice);
+        cyborgToken = new Token(cyborg);
         column = new Column(COLUMN_HEIGHT);
     }
 
@@ -34,22 +40,20 @@ public class ColumnTest extends TestCase {
 
     @Test
     public void testAddTokenAndGetToken() {
-        column.addToken(new Token(alice));
-        column.addToken(new Token(cyborg));
-        column.addToken(new Token(alice));
-        assertEquals("First added token (alice)", new Token(alice), column.getToken(0));
-        assertEquals("First added token (cyborg)", new Token(cyborg), column.getToken(1));
-        assertEquals("First added token (alice)", new Token(alice), column.getToken(2));
+        column.addToken(aliceToken);
+        column.addToken(cyborgToken);
+        assertEquals("First added token (alice)", aliceToken, column.getToken(0));
+        assertEquals("First added token (cyborg)", cyborgToken, column.getToken(1));
     }
 
     @Test
     public void testAddTokenError() {
-        column.addToken(new Token(alice));
-        column.addToken(new Token(alice));
-        column.addToken(new Token(alice));
-        column.addToken(new Token(alice));
+        column.addToken(aliceToken);
+        column.addToken(aliceToken);
+        column.addToken(cyborgToken);
+        column.addToken(aliceToken);
         try {
-            column.addToken(new Token(alice));
+            column.addToken(cyborgToken);
             fail(); // The test failed/was incomplete
         } catch (IllegalArgumentException e) {
             assertEquals("Correct add token error message",
