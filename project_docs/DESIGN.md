@@ -92,11 +92,3 @@ requesting user input from the game interface for human-controlled players.
 * `+getCurrentPlayer()`: `Player`
 * `+setInterface(interface: GameInterface)`: `void`
 * `+takeTurn()`: `void`
-
-## AI
-This interface is simply full of static methods that are used by the controller (or
-really anything) to control how the AI plays.
-This interface is separated from the core GameController class so the AI is more
-plug and play.
-### Methods
-* `+decideColumn(player: Player, board: GameBoard)`: `int`
