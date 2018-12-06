@@ -18,7 +18,8 @@ public class CLI implements GameInterface {
     };
 
 
-    private static String PADDING_STRING = " ";
+    private static String HORIZONTAL_PADDING_STRING = " ";
+    private static String VERTICAL_PADDING_STRING = " ";
     private static int EXTERNAL_PADDING = 3;
     private static int INTERNAL_PADDING = 1;
 
@@ -47,7 +48,7 @@ public class CLI implements GameInterface {
             displayString = playerColor + playerSymbol;
         }
 
-        return displayString + PADDING_STRING.repeat(INTERNAL_PADDING);
+        return displayString + Utils.repeat(PADDING_STRING, INTERNAL_PADDING);
     }
 
     private GameController controller;
@@ -99,11 +100,12 @@ public class CLI implements GameInterface {
     }
 
     public void displayBoard() {
-        output.println(NORMAL_COLOR); // resets the color
+        output.print(NORMAL_COLOR +
+                Utils.repeat(VERTICAL_PADDING_STRING, EXTERNAL_PADDING)); // resets the color
 
         for (int row = game.getHeight() - 1; row >= 0; row--) {
 
-            String line = PADDING_STRING.repeat(EXTERNAL_PADDING);
+            String line = Utils.repeat(PADDING_STRING, EXTERNAL_PADDING);
 
             for (int col = 0; col < game.getWidth(); col++) {
                 Token currentToken = game.getToken(row, col);
@@ -112,7 +114,8 @@ public class CLI implements GameInterface {
             output.println(line);
         }
 
-        output.println(NORMAL_COLOR); // resets the color
+        output.print(NORMAL_COLOR +
+                Utils.repeat(VERTICAL_PADDING_STRING, EXTERNAL_PADDING)); // resets the color
     }
 
     public String requestUserAction() {
@@ -156,9 +159,13 @@ public class CLI implements GameInterface {
         } catch (Exception e) {
             output.println();
             output.println(e.getMessage());
-            output.println(HELP_MESSAGE);
+            output.print(HELP_MESSAGE);
             this.nextTurn();
         }
+    }
+
+    public void print(String message) {
+
     }
 
     public static void main(String[] args) {
@@ -168,6 +175,7 @@ public class CLI implements GameInterface {
         viewer.setController(controller);
         controller.setInterface(viewer);
 
+        viewer.print();
         while (controller.isRunning()) {
             viewer.displayBoard();
             viewer.nextTurn();

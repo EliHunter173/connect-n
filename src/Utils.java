@@ -22,4 +22,11 @@ public class Utils {
         return Integer.parseInt(response);
     }
 
+    public static String repeatString(String message, int count) {
+        String str = "";
+        for (int i = 0; i < count; i++) {
+            str += message;
+        }
+        return str;
+    }
 }

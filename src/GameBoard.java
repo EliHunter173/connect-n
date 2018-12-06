@@ -56,18 +56,18 @@ public class GameBoard {
         return this.tokensToConnect;
     }
 
-    public void empty() {
-        for (int i = 0; i < columns.length; i++) {
-            columns[i].empty();
-        }
-    }
-
     public Token getToken(int row, int col) {
         // Column takes care of row
         if (col < 0 || col >= width) {
             throw new IllegalArgumentException("That col value is out of bounds");
         }
         return columns[col].getToken(row);
+    }
+
+    public void empty() {
+        for (int i = 0; i < columns.length; i++) {
+            columns[i].empty();
+        }
     }
 
     public int addToken(Token token, int col) {
