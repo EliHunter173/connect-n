@@ -4,7 +4,7 @@
  */
 public class Token {
 
-    public static final Token EMPTY = new Token(null);
+    public static final Token EMPTY = new Token(Player.NONE);
 
     /** The owner of this Token object, which cannot be changed after creation. */
     private final Player owner;

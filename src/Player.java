@@ -4,6 +4,16 @@
  */
 public class Player {
 
+    /** A special player with an invalid ID and player type. */
+    public static Player NONE = new Player();
+
+    /** A unique constructor for the NONE player. */
+    private Player() {
+        this.id = -1;
+        this.name = "Nobody";
+        this.playerType = -1;
+    }
+
     /** The number of current players. This is used to assign IDs sequentially. */
     private static int idCounter = 0;
 
@@ -15,11 +25,11 @@ public class Player {
     /**
      * Defines the Human player type. The actual value doesn't matter as long as its consistent.
      */
-    public static final byte HUMAN = -1;
+    public static final byte HUMAN = 0;
     /**
      * Defines the Random AI player type. The actual value doesn't matter as long as its consistent.
      */
-    public static final byte RANDOM_AI = 0;
+    public static final byte RANDOM_AI = 1;
 
     /**
      * A Player's unique ID, which cannot be changed. This is used to determine
@@ -46,7 +56,7 @@ public class Player {
 
     /**
      * Creates a player with the given player's type and then assigns a name from that ID.
-     * The ID is assigned from the ID counter is incremented for future players.
+
      */
     public Player(byte playerType) {
         this.id = ++idCounter; // We want the first player to be player 1 and idCounter to be the number of players

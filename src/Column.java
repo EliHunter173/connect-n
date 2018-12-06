@@ -32,6 +32,7 @@ public class Column {
         for (int i = 0; i < tokens.length; i++) {
             tokens[i] = Token.EMPTY;
         }
+        numberOfTokens = 0;
     }
 
 }
