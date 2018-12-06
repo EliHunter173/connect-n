@@ -21,11 +21,12 @@ public class Column {
         return tokens[row];
     }
 
-    public void addToken(Token token) {
+    public int addToken(Token token) {
         if (numberOfTokens >= maxTokens) {
             throw new IllegalArgumentException("Column is full");
         }
-        tokens[numberOfTokens++] = token;
+        tokens[numberOfTokens] = token;
+        return numberOfTokens++;
     }
 
     public void empty() {

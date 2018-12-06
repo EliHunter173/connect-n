@@ -56,7 +56,6 @@ public class Player {
 
     /**
      * Creates a player with the given player's type and then assigns a name from that ID.
-
      */
     public Player(byte playerType) {
         this.id = ++idCounter; // We want the first player to be player 1 and idCounter to be the number of players
@@ -65,11 +64,11 @@ public class Player {
     }
 
     /**
-     * Accessor Method for playerType.
-     * @return This player's playerType.
+     * Accessor Method for id.
+     * @return This player's id.
      */
-    public byte getPlayerType() {
-        return playerType;
+    public int getId() {
+        return id;
     }
 
     /**
@@ -78,6 +77,14 @@ public class Player {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Accessor Method for playerType.
+     * @return This player's playerType.
+     */
+    public byte getPlayerType() {
+        return playerType;
     }
 
     /**

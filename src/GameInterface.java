@@ -1,14 +1,13 @@
+// NOTE: This would actually make more sense as an abstract class,
+// but we haven't been taught those yet.
 public interface GameInterface {
 
-    private GameController controller;
-    private GameBoard game;
+    public void setController(GameController controller);
 
-    public void setController();
+    public void displayBoard();
 
-    public String requestUserInput();
+    public String requestUserAction();
 
-    private void displayBoard();
-
-    private Player[] requestPlayers();
+    public Player[] requestPlayers();
 
 }

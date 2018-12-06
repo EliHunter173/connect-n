@@ -7,23 +7,29 @@ public class GameBoard {
     // 32 is just absurdly big
     public static final int MAX_TOKENS_TO_CONNECT = 32;
 
+    public static final String HIGH_TOKENS_ERROR_MESSAGE =
+        String.format("The number of tokens exceeds the maximum. (%d)", MAX_TOKENS_TO_CONNECT);
+    public static final String LOW_TOKENS_ERROR_MESSAGE =
+        String.format("The number of tokens cannot be less than the the minimum. (%d)", MIN_TOKENS_TO_CONNECT);
+    public static final String INVALID_HEIGHT_ERROR_MESSAGE =
+        "The height of the board must be greater than the number of tokens to connect.";
+    public static final String INVALID_WIDTH_ERROR_MESSAGE =
+        "The height of the board must be greater than the number of tokens to connect.";
+
     private final int width;
     private final int height;
     private final int tokensToConnect;
     private Column[] columns;
 
     public GameBoard(int width, int height, int tokensToConnect) {
-        if (width < tokensToConnect || height < tokensToConnect) {
-            throw new IllegalArgumentException("The width and height of the board must be greater"
-                                               + " than the number of tokens to connect.");
-        }
-        if (tokensToConnect < MIN_TOKENS_TO_CONNECT) {
-            throw new IllegalArgumentException("The number of tokens to connect is too low.");
-        }
-        if (tokensToConnect > MAX_TOKENS_TO_CONNECT) {
-            throw new IllegalArgumentException( String.format(
-                    "The number of tokens greater than the maximum. (%d)", MAX_TOKENS_TO_CONNECT));
-        }
+        if (width < tokensToConnect )
+            throw new IllegalArgumentException(INVALID_WIDTH_ERROR_MESSAGE);
+        if (height < tokensToConnect)
+            throw new IllegalArgumentException(INVALID_HEIGHT_ERROR_MESSAGE);
+        if (tokensToConnect < MIN_TOKENS_TO_CONNECT)
+            throw new IllegalArgumentException(LOW_TOKENS_ERROR_MESSAGE);
+        if (tokensToConnect > MAX_TOKENS_TO_CONNECT)
+            throw new IllegalArgumentException(HIGH_TOKENS_ERROR_MESSAGE);
 
         this.width = width;
         this.columns = new Column[width];
@@ -64,11 +70,11 @@ public class GameBoard {
         return columns[col].getToken(row);
     }
 
-    public void addToken(Token token, int col) {
+    public int addToken(Token token, int col) {
         if (col < 0 || col > width) {
             throw new IllegalArgumentException("That col value is out of bounds");
         }
-        columns[col].addToken(token);
+        return columns[col].addToken(token);
     }
 
     public boolean isWinningPosition(int row, int col) {
@@ -115,7 +121,6 @@ public class GameBoard {
         // sequence with row step-size rowStepSize and column step-size colStepSize that contains your
         // current row (anchorRow) and current column (anchorCol).
 
-        System.out.printf("\nNEW CHECK: %d, %d, %d, %d, %d\n", anchorRow, anchorCol, rowStepSize, colStepSize, numberOfTokens);
         // You look at the token you're standing on and memorize it.
         Token anchorToken = this.getToken(anchorRow, anchorCol);
         // Empty tokens don't count
@@ -131,7 +136,6 @@ public class GameBoard {
             int startingRow = anchorRow - rowStepSize * stepsBack;
             int startingCol = anchorCol - colStepSize * stepsBack;
 
-            System.out.printf("Starting (%d,%d)\n", startingRow, startingCol);
             // Now, you start taking steps, each time making sure that the token you're
             // standing on is the same as your anchor token.
             boolean badSequence = false;
@@ -139,7 +143,6 @@ public class GameBoard {
 
                 int row = startingRow + stepsTaken * rowStepSize;
                 int col = startingCol + stepsTaken * colStepSize;
-                System.out.printf("(%d,%d) steps: %d\n", row, col, stepsTaken);
 
                 try {
                     Token currentToken = this.getToken(row, col);
