@@ -19,9 +19,11 @@ public class CLI implements GameInterface {
 
 
     private static String HORIZONTAL_PADDING_STRING = " ";
-    private static String VERTICAL_PADDING_STRING = " ";
     private static int EXTERNAL_PADDING = 3;
     private static int INTERNAL_PADDING = 1;
+    private static String VERTICAL_PADDING_STRING = "\n";
+    private static int VERTICAL_PADDING = 1;
+
 
     private static String PLAYER_PROMPT = "%s's Turn!\n";
 
@@ -101,7 +103,7 @@ public class CLI implements GameInterface {
 
     public void displayBoard() {
         output.print(NORMAL_COLOR +
-                Utils.repeatString(VERTICAL_PADDING_STRING, EXTERNAL_PADDING)); // resets the color
+                Utils.repeatString(VERTICAL_PADDING_STRING, VERTICAL_PADDING)); // resets the color
 
         for (int row = game.getHeight() - 1; row >= 0; row--) {
 
@@ -115,7 +117,7 @@ public class CLI implements GameInterface {
         }
 
         output.print(NORMAL_COLOR +
-                Utils.repeatString(VERTICAL_PADDING_STRING, EXTERNAL_PADDING)); // resets the color
+                Utils.repeatString(VERTICAL_PADDING_STRING, VERTICAL_PADDING)); // resets the color
     }
 
     public String requestUserAction() {
@@ -175,10 +177,11 @@ public class CLI implements GameInterface {
         viewer.setController(controller);
         controller.setInterface(viewer);
 
-        viewer.print(HELP_MESSAGE);
+        viewer.print("\n" + HELP_MESSAGE);
         while (controller.isRunning()) {
             viewer.displayBoard();
             viewer.nextTurn();
         }
     }
+
 }

@@ -133,3 +133,5 @@ and prompts the user over the terminal.
 * `-INTERNAL_PADDING`: `int`
 * `-PLAYER_PROMPT`: `(format) String`
 * `-HELP_MESSAGE`: `String`
+### Methods
+* `+getColor(number: int)`: `String`
