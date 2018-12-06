@@ -3,6 +3,8 @@ import java.io.PrintStream;
 
 public class Utils {
 
+    public static String INT_ERROR_MESSAGE = "That is not an integer.";
+
     public static boolean isInt(String str) {
         try {
             Integer.parseInt(str);
@@ -18,6 +20,10 @@ public class Utils {
         while (!Utils.isInt(response)) {
             output.print(message);
             response = input.next();
+
+            if (!Utils.isInt(response)) {
+                output.println(INT_ERROR_MESSAGE);
+            }
         }
         return Integer.parseInt(response);
     }
