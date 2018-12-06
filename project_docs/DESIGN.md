@@ -120,8 +120,6 @@ This interface also collects all user input required by the game controller.
 ## CLI
 This is a specific implementation of `GameInterface` which displays all things
 and prompts the user over the terminal.
-### Constructors
-* `CLI()`: Generates a game board by prompting a user for the number of tokens to connect, width, height, number of players, and then all of those player's names.
 ### Fields
 * `-NORMAL_COLOR`: `String`
 * `-NONE_PLAYER_SYMBOL`: `char`
@@ -133,5 +131,20 @@ and prompts the user over the terminal.
 * `-INTERNAL_PADDING`: `int`
 * `-PLAYER_PROMPT`: `(format) String`
 * `-HELP_MESSAGE`: `String`
+### Constructors
+* `CLI()`: Generates a game board by prompting a user for the number of tokens to connect, width, height, number of players, and then all of those player's names.
 ### Methods
 * `+getColor(number: int)`: `String`
+* `+displayToken(token: Token)`: `String`
+* `-controller`: `GameController`
+* `-game`: `GameBoard`
+* `-input`: `Scanner`
+* `-output`: `PrintStream`
+* `+getGame()`: `GameBoard`
+* `+setController(controller: GameController)`: `void`
+* `+displayBoard()`: `void`
+* `+requestUserAction()`: `String`
+* `+requestPlayers()`: `Player[]`
+* `+requestPlayer()`: `Player`
+* `+nextTurn()`: `void`
+* `+print(message: String)`: `void`
