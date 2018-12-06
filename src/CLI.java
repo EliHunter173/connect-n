@@ -48,7 +48,7 @@ public class CLI implements GameInterface {
             displayString = playerColor + playerSymbol;
         }
 
-        return displayString + Utils.repeat(PADDING_STRING, INTERNAL_PADDING);
+        return displayString + Utils.repeatString(HORIZONTAL_PADDING_STRING, INTERNAL_PADDING);
     }
 
     private GameController controller;
@@ -101,11 +101,11 @@ public class CLI implements GameInterface {
 
     public void displayBoard() {
         output.print(NORMAL_COLOR +
-                Utils.repeat(VERTICAL_PADDING_STRING, EXTERNAL_PADDING)); // resets the color
+                Utils.repeatString(VERTICAL_PADDING_STRING, EXTERNAL_PADDING)); // resets the color
 
         for (int row = game.getHeight() - 1; row >= 0; row--) {
 
-            String line = Utils.repeat(PADDING_STRING, EXTERNAL_PADDING);
+            String line = Utils.repeatString(HORIZONTAL_PADDING_STRING, EXTERNAL_PADDING);
 
             for (int col = 0; col < game.getWidth(); col++) {
                 Token currentToken = game.getToken(row, col);
@@ -115,7 +115,7 @@ public class CLI implements GameInterface {
         }
 
         output.print(NORMAL_COLOR +
-                Utils.repeat(VERTICAL_PADDING_STRING, EXTERNAL_PADDING)); // resets the color
+                Utils.repeatString(VERTICAL_PADDING_STRING, EXTERNAL_PADDING)); // resets the color
     }
 
     public String requestUserAction() {
@@ -165,7 +165,7 @@ public class CLI implements GameInterface {
     }
 
     public void print(String message) {
-
+        output.print(message);
     }
 
     public static void main(String[] args) {
@@ -175,7 +175,7 @@ public class CLI implements GameInterface {
         viewer.setController(controller);
         controller.setInterface(viewer);
 
-        viewer.print();
+        viewer.print(HELP_MESSAGE);
         while (controller.isRunning()) {
             viewer.displayBoard();
             viewer.nextTurn();
