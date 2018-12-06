@@ -14,7 +14,7 @@ public class GameBoardTest extends TestCase {
     /** The height for the testing game board */
     private static int HEIGHT = 4;
     /** The number of tokens to connect for the testing game board */
-    private static int TOKENS_TO_CONNECT = 3;
+    private static int TOKENS_TO_CONNECT = 4;
 
     /** Player Alice for testing */
     private Player alice;
@@ -54,7 +54,7 @@ public class GameBoardTest extends TestCase {
     @Test
     public void testGetTokensToConnect() {
         assertTrue("Board's assigned tokens to connect", TOKENS_TO_CONNECT == board.getTokensToConnect());
-        assertTrue("Board's true tokens to connect", 3 == board.getTokensToConnect());
+        assertTrue("Board's true tokens to connect", 4 == board.getTokensToConnect());
         assertFalse("Board's false tokens to connect", 920 == board.getTokensToConnect());
     }
 
@@ -206,6 +206,7 @@ public class GameBoardTest extends TestCase {
     public void testIsWinningPosition() {
         assertFalse("Token (0,0) empty board", board.isWinningPosition(3,1));
 
+        board.empty();
         board.addToken(aliceToken, 0);
         board.addToken(aliceToken, 1);
         board.addToken(aliceToken, 2);
@@ -218,9 +219,10 @@ public class GameBoardTest extends TestCase {
         board.addToken(cyborgToken, 0);
         board.addToken(cyborgToken, 0);
         board.addToken(cyborgToken, 0);
-        assertTrue("Token (4,0) vertical match", board.isWinningPosition(4,0));
-        assertFalse("Token (0,4) no vertical match", board.isWinningPosition(0,4));
+        assertTrue("Token (3,0) vertical match", board.isWinningPosition(3,0));
+        assertFalse("Token (0,3) no vertical match", board.isWinningPosition(0,3));
 
+        board.empty();
         for (int row = 0; row < HEIGHT; row++) {
             for (int col = 0; col < WIDTH; col++) {
                 board.addToken(cyborgToken, col);
@@ -233,21 +235,26 @@ public class GameBoardTest extends TestCase {
             }
         }
 
-        // NOTE: This shortcut only works because the given height is even
         // This board will never have a 4-way match
+        board.empty();
         for (int row = 0; row < HEIGHT; row++) {
             for (int col = 0; col < WIDTH; col++) {
-                if (col % 2 == 0) {
-                    board.addToken(cyborgToken, col);
+                int var = (row % 4) / 2;
+                if (col % 2 == var) {
                     board.addToken(cyborgToken, col);
                 } else {
-                    board.addToken(aliceToken, col);
                     board.addToken(aliceToken, col);
                 }
             }
         }
+        // RESULT
+        // ACACA
+        // ACACA
+        // CACAC
+        // CACAC
         for (int row = 0; row < HEIGHT; row++) {
             for (int col = 0; col < WIDTH; col++) {
+                System.out.println("HERE");
                 assertFalse(String.format("Token (%d,%d) full, imperfect board", row, col),
                             board.isWinningPosition(row,col));
             }
