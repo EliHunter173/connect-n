@@ -3,10 +3,10 @@ import java.io.PrintStream;
 
 public class CLI implements GameInterface {
 
-    private static String NORMAL_COLOR = "\u001B[37;0m"; // ANSI reset code
+    private static String NORMAL_COLOR = "\u001B[37;0m"; // ANSI white
     private static char NONE_PLAYER_SYMBOL = 'O'; // NOTE: This should always be a single character
 
-    //private static String[] PLAYER_COLORS = { }
+    private static String BOLD_NORMAL_COLOR = "\u001B[37;1m"; // ANSI bold white
     private static int NAME_SYMBOL_INDEX = 0;
     private static String[] PLAYER_COLORS = {
         "\u001B[31m", // red
@@ -125,6 +125,13 @@ public class CLI implements GameInterface {
             }
             output.println(line);
         }
+
+        output.println();
+        String line = Utils.repeatString(HORIZONTAL_PADDING_STRING, EXTERNAL_PADDING);
+        for (int col = 0; col < game.getWidth(); col++) {
+            line += col + Utils.repeatString(HORIZONTAL_PADDING_STRING, INTERNAL_PADDING);
+        }
+        output.println(line);
 
         output.print(NORMAL_COLOR +
                 Utils.repeatString(VERTICAL_PADDING_STRING, VERTICAL_PADDING)); // resets the color
