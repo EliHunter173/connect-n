@@ -20,6 +20,7 @@ public class GameBoard {
     private final int height;
     private final int tokensToConnect;
     private Column[] columns;
+    private int numberOfTokens;
 
     public GameBoard(int width, int height, int tokensToConnect) {
         if (width < tokensToConnect )
@@ -39,6 +40,7 @@ public class GameBoard {
             columns[i] = new Column(height);
         }
 
+        this.numberOfTokens = 0;
         this.empty();
 
         this.tokensToConnect = tokensToConnect;
@@ -56,6 +58,13 @@ public class GameBoard {
         return this.tokensToConnect;
     }
 
+    public int getNumberOfTokens() {
+        return numberOfTokens;
+    }
+
+    public int getMaxNumberOfTokens() {
+        return width * height;
+    }
     public Token getToken(int row, int col) {
         // Column takes care of row
         if (col < 0 || col >= width) {
@@ -74,6 +83,8 @@ public class GameBoard {
         if (col < 0 || col > width) {
             throw new IllegalArgumentException("That col value is out of bounds");
         }
+
+        numberOfTokens++;
         return columns[col].addToken(token);
     }
 

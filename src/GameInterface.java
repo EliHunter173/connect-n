@@ -10,4 +10,7 @@ public interface GameInterface {
 
     public Player[] requestPlayers();
 
+    public void displayWin();
+
+    public void displayGameOver();
 }

@@ -3,7 +3,7 @@ import java.io.PrintStream;
 
 public class CLI implements GameInterface {
 
-    private static String NORMAL_COLOR = "\u001B[0m"; // ANSI reset code
+    private static String NORMAL_COLOR = "\u001B[37;0m"; // ANSI reset code
     private static char NONE_PLAYER_SYMBOL = 'O'; // NOTE: This should always be a single character
 
     //private static String[] PLAYER_COLORS = { }
@@ -24,8 +24,16 @@ public class CLI implements GameInterface {
     private static String VERTICAL_PADDING_STRING = "\n";
     private static int VERTICAL_PADDING = 1;
 
+    private static String HORIZONTAL_RULE =
+        "=====================================\n";
 
     private static String PLAYER_PROMPT = "%s's Turn!\n";
+
+    private static String WIN_TEXT =
+        "Congratulations, %s! You win!\n";
+
+    private static String GAME_OVER_TEXT =
+        "Boo... Nobody wins.\n";
 
     public static String HELP_MESSAGE =
         "Actions: H: Displays this help message.\n" +
@@ -63,6 +71,7 @@ public class CLI implements GameInterface {
         this.input.useDelimiter("\n");
 
         this.output = new PrintStream(System.out);
+        this.output.print(NORMAL_COLOR); // resets the color
 
         int tokensToConnect;
         do {
@@ -102,6 +111,7 @@ public class CLI implements GameInterface {
     }
 
     public void displayBoard() {
+        output.print(HORIZONTAL_RULE);
         output.print(NORMAL_COLOR +
                 Utils.repeatString(VERTICAL_PADDING_STRING, VERTICAL_PADDING)); // resets the color
 
@@ -159,15 +169,23 @@ public class CLI implements GameInterface {
             controller.takeTurn();
 
         } catch (Exception e) {
-            output.println();
+            output.print(HORIZONTAL_RULE);
             output.println(e.getMessage());
             output.print(HELP_MESSAGE);
+            output.println();
             this.nextTurn();
         }
     }
 
-    public void print(String message) {
-        output.print(message);
+    public void displayWin() {
+        this.displayBoard();
+        Player currentPlayer = controller.getCurrentPlayer();
+        output.printf(WIN_TEXT, currentPlayer.getName());
+    }
+
+    public void displayGameOver() {
+        this.displayBoard();
+        output.printf(GAME_OVER_TEXT);
     }
 
     public static void main(String[] args) {
@@ -177,7 +195,6 @@ public class CLI implements GameInterface {
         viewer.setController(controller);
         controller.setInterface(viewer);
 
-        viewer.print("\n" + HELP_MESSAGE);
         while (controller.isRunning()) {
             viewer.displayBoard();
             viewer.nextTurn();

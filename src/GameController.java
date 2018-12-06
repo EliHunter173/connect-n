@@ -47,8 +47,18 @@ public class GameController {
         if (Utils.isInt(action)) {
             int col = Integer.parseInt(action);
             int row  = game.addToken(currentPlayerToken, col);
-            this.isRunning = !game.isWinningPosition(row, col);
-            this.nextPlayer(); // We only increment the pointer if we consider the input successful
+
+            if (game.getNumberOfTokens() >= game.getMaxNumberOfTokens()) {
+                this.isRunning = false;
+                client.displayGameOver();
+            }
+            if (game.isWinningPosition(row, col)) {
+                this.isRunning = false;
+                client.displayWin();
+
+            } else {
+                this.nextPlayer(); // We only increment the pointer if we consider the input successful
+            }
 
         } else {
             action = action.toUpperCase();

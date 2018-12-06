@@ -114,6 +114,8 @@ This interface also collects all user input required by the game controller.
 ### Methods
 * `+setController(controller: GameController)`: `void`
 * `+displayBoard()`: `void`
+* `+displayWin()`: `void`
+* `+displayGameOver()`: `void`
 * `+requestUserAction()`: `String`
 * `+requstPlayers()`: `Player[]`
 
