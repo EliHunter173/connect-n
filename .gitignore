@@ -27,3 +27,9 @@ hs_err_pid*
 
 # vim temporary files
 *.swp
+
+# workspace dir
+workspace
+
+# Ctags file
+tags
