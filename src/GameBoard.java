@@ -1,36 +1,63 @@
 import java.util.*; // For Arrays
 
+/**
+ * Describes a 2D GameBoard of Tokens through a 1D array of Columns.
+ * @author Eli W. Hunter
+ */
 public class GameBoard {
 
-    // 3 is the minimum value possible to not have a guaranteed game
-    public static final int MIN_TOKENS_TO_CONNECT = 3;
-    // 32 is just absurdly big
-    public static final int MAX_TOKENS_TO_CONNECT = 32;
-
-    public static final String HIGH_TOKENS_ERROR_MESSAGE =
-        String.format("The number of tokens exceeds the maximum. (%d)", MAX_TOKENS_TO_CONNECT);
-    public static final String LOW_TOKENS_ERROR_MESSAGE =
-        String.format("The number of tokens cannot be less than the the minimum. (%d)", MIN_TOKENS_TO_CONNECT);
+    // ERROR MESSAGES
+    // I really wish I knew how to define my own errors, so I didn't have to
+    // do this hacky stuff.
+    /**
+     * The error message displayed when the width is less than the number
+     * of tokens to connect.
+     */
     public static final String INVALID_HEIGHT_ERROR_MESSAGE =
-        "The height of the board must be greater than the number of tokens to connect.";
+        "The height must be greater than the number of tokens to connect.";
+    /**
+     * The error message displayed when the height is less than the number
+     * of tokens to connect.
+     */
     public static final String INVALID_WIDTH_ERROR_MESSAGE =
-        "The height of the board must be greater than the number of tokens to connect.";
+        "The width must be greater than the number of tokens to connect.";
+    /** The error message displayed when the column value is invalid.  */
+    public static final String INVALID_COL_ERROR_MESSAGE =
+        "Column is out of bounds.";
 
+    /** The (permanent) width of the GameBoard. (i.e. The number of columns.) */
     private final int width;
+    /**
+     * The (permanent) height of the GameBoard. (i.e. The max number of tokens
+     * of each Column.)
+     */
     private final int height;
+    /**
+     * The (permanent) number of tokens that must be connected for the board
+     * to be won.
+     */
     private final int tokensToConnect;
+    /** The array of Column objects. Describes the GameBoard. */
     private Column[] columns;
+    /** The number of tokens that have been added to the GameBoard. */
     private int numberOfTokens;
 
+    /**
+     * Generates a GameBoard object with the given width, height,
+     * and number of tokens to connect.
+     * @param width The width of the GameBoard. (i.e. The number of columns.)
+     * @param height The height of the GameBoard. (i.e. The max number of tokens
+     *     in each column).
+     * @param tokensToConnect The number of tokens that must be connected for
+     *     the board to be considered won.
+     * @throws IllegalArgumentException When the specified height or width is
+     *     less than the number of tokens to connect.
+     */
     public GameBoard(int width, int height, int tokensToConnect) {
-        if (width < tokensToConnect )
+        if (width < tokensToConnect)
             throw new IllegalArgumentException(INVALID_WIDTH_ERROR_MESSAGE);
         if (height < tokensToConnect)
             throw new IllegalArgumentException(INVALID_HEIGHT_ERROR_MESSAGE);
-        if (tokensToConnect < MIN_TOKENS_TO_CONNECT)
-            throw new IllegalArgumentException(LOW_TOKENS_ERROR_MESSAGE);
-        if (tokensToConnect > MAX_TOKENS_TO_CONNECT)
-            throw new IllegalArgumentException(HIGH_TOKENS_ERROR_MESSAGE);
 
         this.width = width;
         this.columns = new Column[width];
@@ -46,55 +73,114 @@ public class GameBoard {
         this.tokensToConnect = tokensToConnect;
     }
 
+    /**
+     * Accessor Method
+     * @return The width of the GameBoard. (i.e. The number of columns.)
+     */
     public int getWidth() {
         return this.width;
     }
 
+    /**
+     * Accessor Method
+     * @return The height of the GameBoard. (i.e. The max number of tokens
+     *     in each of column.)
+     */
     public int getHeight() {
         return this.height;
     }
 
+    /**
+     * Accessor Method
+     * @return The number of tokens to connect in the GameBoard for it to be
+     *     declared won.
+     */
     public int getTokensToConnect() {
         return this.tokensToConnect;
     }
 
+    /**
+     * Accessor Method
+     * @return The number of tokens to connect in the GameBoard for it to be
+     *     declared won.
+     */
     public int getNumberOfTokens() {
         return numberOfTokens;
     }
 
+    /**
+     * Accessor Method
+     * @return The max number of tokens the GameBoard can contain. Determined
+     *     by finding the area of the GameBoard. (width * height)
+     */
     public int getMaxNumberOfTokens() {
         return width * height;
     }
+
+    /**
+     * Finds and returns the Token at the specified row and column.
+     * @param row The row (i.e. index in the column) that the desired token is at.
+     * @param col The column that the desired token is at.
+     * @return The token at the specifed column and row for this GameBoard.
+     * @throws IllegalArgumentException When the column or row is not a valid
+     *     index.
+     */
     public Token getToken(int row, int col) {
         // Column takes care of row
-        if (col < 0 || col >= width) {
-            throw new IllegalArgumentException("That col value is out of bounds");
-        }
+        if (col < 0 || col >= width)
+            throw new IllegalArgumentException(INVALID_COL_ERROR_MESSAGE);
+
         return columns[col].getToken(row);
     }
 
+    /**
+     * Adds the specified token to the specified column by calling the addToken()
+     * method on that Column.
+     * @param token The Token object to be added to the GameBoard.
+     * @param col The index of the Column which will receive this Token.
+     * @return True if the added token is part of a winning sequence. False
+     *     otherwise.
+     * @throws IllegalArgumentException When the column is not a valid index.
+     */
+    public boolean addToken(Token token, int col) {
+        if (col < 0 || col > width)
+            throw new IllegalArgumentException(INVALID_COL_ERROR_MESSAGE);
+
+        numberOfTokens++;
+        int row = columns[col].addToken(token);
+        return this.isWinningPosition(row, col);
+    }
+
+    /**
+     * Fills the GameBoard with empty tokens (Token.EMPTY objects) by filling
+     * each column with empty tokens.
+     */
     public void empty() {
         for (int i = 0; i < columns.length; i++) {
             columns[i].empty();
         }
     }
 
-    public int addToken(Token token, int col) {
-        if (col < 0 || col > width) {
-            throw new IllegalArgumentException("That col value is out of bounds");
-        }
-
-        numberOfTokens++;
-        return columns[col].addToken(token);
-    }
-
+    /**
+     * Checks if the given row and column is part of any winning sequences. That is,
+     * if the position is part of a sequence that is tokensToConnect in length
+     * in either the vertical, horizontal, positive diagonal, or negative diagonal
+     * direction
+     * @param row The row to be checked to see if it is part of any winning
+     *     sequences.
+     * @param col The column to be checked to see if it is part of any winning
+     *     sequences.
+     * @return True if the row and column are part of any winning sequences.
+     *     False otherwise.
+     * @throws IllegalArgumentException When the row or column value is not a valid
+     *     value (i.e. less than 0 and greater than the width or height).
+     */
     public boolean isWinningPosition(int row, int col) {
-        if (row < 0 || row > height) {
-            throw new IllegalArgumentException("That row value is out of bounds");
-        }
-        if (col < 0 || col > width) {
-            throw new IllegalArgumentException("That col value is out of bounds");
-        }
+        if (row < 0 || row > height)
+            throw new IllegalArgumentException(Column.INVALID_ROW_ERROR_MESSAGE);
+        if (col < 0 || col > width)
+            throw new IllegalArgumentException(INVALID_COL_ERROR_MESSAGE);
+
         return checkVertical(row, col)
                || checkHorizontal(row, col)
                || checkPositiveDiagonal(row, col)
@@ -102,32 +188,95 @@ public class GameBoard {
     }
 
     // Submethods of isWinningPosition()
+    /**
+     * Checks if the given row and column is part of any winning sequence in
+     * the vertical direction.<br>
+     * Precondition: The row and column are valid.
+     * @param row The row to be checked to see if it is part of a vertical winning
+     *     sequence.
+     * @param col The column to be checked to see if it is part of a vertical
+     *     winning sequence.
+     * @return True if the row and column are part of a vertical winning sequence.
+     *     False otherwise.
+     */
     public boolean checkVertical(int row, int col) {
-        // PRECONDITION: Valid row and col values.
         // i.e. |. row is variable. col is constant.
         return checkSequence(row, col, 1, 0, tokensToConnect);
     }
 
+    /**
+     * Checks if the given row and column is part of any winning sequence in
+     * the horizontal direction.<br>
+     * Precondition: The row and column are valid.
+     * @param row The row to be checked to see if it is part of a horizontal winning
+     *     sequence.
+     * @param col The column to be checked to see if it is part of a horizontal
+     *     winning sequence.
+     * @return True if the row and column are part of a horizontal winning sequence.
+     *     False otherwise.
+     */
     public boolean checkHorizontal(int row, int col) {
-        // PRECONDITION: Valid row and col values.
         // i.e. |. row is constant. col is variable.
         return checkSequence(row, col, 0, 1, tokensToConnect);
     }
 
+    /**
+     * Checks if the given row and column is part of any winning sequence in
+     * the postitive diagonal direction.<br>
+     * Precondition: The row and column are valid.
+     * @param row The row to be checked to see if it is part of a postitive diagonal
+     *     winning sequence.
+     * @param col The column to be checked to see if it is part of a positive diagonal
+     *     winning sequence.
+     * @return True if the row and column are part of a positive diagonal winning sequence.
+     *     False otherwise.
+     */
     public boolean checkPositiveDiagonal(int row, int col) {
-        // PRECONDITION: Valid row and col values.
         // i.e. /. row is increasing, col is increasing.
         return checkSequence(row, col, 1, 1, tokensToConnect);
     }
 
+    /**
+     * Checks if the given row and column is part of any winning sequence in
+     * the negative diagonal direction.<br>
+     * Precondition: The row and column are valid.
+     * @param row The row to be checked to see if it is part of a negative diagonal
+     *     winning sequence.
+     * @param col The column to be checked to see if it is part of a negative diagonal
+     *     winning sequence.
+     * @return True if the row and column are part of a negative diagonal winning sequence.
+     *     False otherwise.
+     */
     public boolean checkNegativeDiagonal(int row, int col) {
-        // PRECONDITION: Valid row and col values.
         // i.e. \. row is increasing. col is increasing.
         return checkSequence(row, col, 1, -1, tokensToConnect);
     }
 
+    /**
+     * Checks if the given row and column is part of the the specified
+     * arbitrary sequence.<br>
+     * Sequences are specified with a center row and column, a row and column
+     * step size, and a number of tokens to check (which is used to determine
+     * the number of steps to take in both directions.)<br>
+     * Precondition: The row and column are valid.
+     * @param anchorRow The center row of the sequence. A specific number of steps
+     *     (from the number of tokens), is taken up and down from the row.
+     * @param anchorCol The center column of the sequence. A specific number
+     *     of steps (from the number of tokens), is taken left and right from
+     *     the column.
+     * @param rowStepSize The size of each individual step taken from row to
+     *     row. This can be also thought of as the difference in row values between
+     *     each adjacent cell in the sequence.
+     * @param colStepSize The size of each individual step taken from column to
+     *     column.  This can be also thought of as the difference in column values
+     *     between each adjacent cell in the sequence.
+     * @param numberOfTokens The number of tokens to be checked. This is used
+     *     to determine the number of steps that are taken in both directions
+     *     from the anchor row and anchor column.
+     * @return True if the anchor row and anchor column are part of a winning
+     *     sequence in the specified sequence.  False otherwise.
+     */
     public boolean checkSequence(int anchorRow, int anchorCol, int rowStepSize, int colStepSize, int numberOfTokens) {
-        // PRECONDITION: Valid row and col values.
         // You want to find out if you have numberOfTokens in a row at least once for any linear
         // sequence with row step-size rowStepSize and column step-size colStepSize that contains your
         // current row (anchorRow) and current column (anchorCol).
@@ -176,14 +325,5 @@ public class GameBoard {
         return false; // a good sequence was never found
     }
     // End submethods of isWinningPosition()
-    public static void main(String[] args) {
-        GameBoard test = new GameBoard(5, 5, 3);
-        Player player = new Player(Player.HUMAN);
-        test.addToken(new Token(player), 0);
-        test.addToken(new Token(player), 0);
-        test.addToken(new Token(player), 0);
-
-        System.out.println("\n" + test.isWinningPosition(0, 1));
-    }
 
 }

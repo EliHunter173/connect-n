@@ -39,32 +39,42 @@ public class Player {
     /** A Player's display name.  */
     private final String name;
     /**
-     * This determines a player's type, which determines how the controller interacts
-     * with them.
+     * This determines a player's type, which determines how the controller
+     * interacts with them.
      */
     private byte playerType; // Note: This is not final so we can make a player an AI if they forfeit
 
     /**
-     * Creates a player with the given name and the player's type.  The ID is assigned from
-     * the ID counter is incremented for future players.
+     * Creates a player with the given name and the player's type.  The ID is
+     * assigned from the ID counter is incremented for future players.
+     * @param name The name of the player to be created.
+     * @param playerType The type of player the new Player object is.
+     *     (i.e. Are they human, AI, etc.)
+     * @throws IllegalArgumentException When the inputted name is empty.
      */
     public Player(String name, byte playerType) {
-        this.id = ++idCounter; // We want the first player to be player 1 and idCounter to be the number of players
+        if (name.equals(""))
+            throw new IllegalArgumentException("A player cannot have an empty name.");
+
+        this.id = idCounter++;
         this.name = name;
         this.playerType = playerType;
     }
 
     /**
-     * Creates a player with the given player's type and then assigns a name from that ID.
+     * Creates a player with the given player's type and then
+     * assigns a name from their ID.
+     * @param playerType The type of player the new Player object is.
+     *      (i.e. Are they human, AI, etc.)
      */
     public Player(byte playerType) {
-        this.id = ++idCounter; // We want the first player to be player 1 and idCounter to be the number of players
+        this.id = idCounter++;
         this.name = "Player " + this.id;
         this.playerType = playerType;
     }
 
     /**
-     * Accessor Method for id.
+     * Accessor Method.
      * @return This player's id.
      */
     public int getId() {
@@ -72,7 +82,7 @@ public class Player {
     }
 
     /**
-     * Accessor Method for name.
+     * Accessor Method.
      * @return This player's name.
      */
     public String getName() {
@@ -88,9 +98,12 @@ public class Player {
     }
 
     /**
-     * Determines whether two paleyrs are equal or not by seeing if they are both players
-     * and have the same id.
-     * @return True if both objects are players that have the same ID. False otherwise.
+     * Determines whether two paleyrs are equal or not by seeing if they are
+     * both players and have the same id.
+     * @param other The other object that this Player object is being compared
+     *     against.
+     * @return True if both objects are players that have the same ID.
+     *     False otherwise.
      */
     public boolean equals(Object other) {
         if (other instanceof Player) {

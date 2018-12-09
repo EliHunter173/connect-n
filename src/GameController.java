@@ -4,17 +4,30 @@ public class GameController {
     public static final String LOW_PLAYERS_ERROR_MESSAGE =
         String.format("There must be at least %d players", MIN_PLAYERS);
 
+    // 3 is the minimum value possible to not have a guaranteed game
+    public static final int MIN_TOKENS_TO_CONNECT = 3;
+    // 32 is just absurdly big
+    public static final int MAX_TOKENS_TO_CONNECT = 32;
+    public static final String HIGH_TOKENS_ERROR_MESSAGE =
+        String.format("The number of tokens exceeds the maximum. (%d)", MAX_TOKENS_TO_CONNECT);
+    public static final String LOW_TOKENS_ERROR_MESSAGE =
+        String.format("The number of tokens cannot be less than the the minimum. (%d)", MIN_TOKENS_TO_CONNECT);
+
     private GameInterface client;
     private GameBoard game;
     private Player[] players;
     private int playerPointer;
     private boolean isRunning;
 
-    public GameController(GameBoard game, Player[] players) {
+    public GameController(int width, int height, int tokensToConnect, Player[] players) {
+        if (tokensToConnect < MIN_TOKENS_TO_CONNECT)
+            throw new IllegalArgumentException(LOW_TOKENS_ERROR_MESSAGE);
+        if (tokensToConnect > MAX_TOKENS_TO_CONNECT)
+            throw new IllegalArgumentException(HIGH_TOKENS_ERROR_MESSAGE);
         if (players.length < MIN_PLAYERS)
             throw new IllegalArgumentException(LOW_PLAYERS_ERROR_MESSAGE);
 
-        this.game = game;
+        this.game = new GameBoard(width, height, tokensToConnect);
         this.players = players;
         this.playerPointer = 0;
         this.isRunning = true;
@@ -26,6 +39,14 @@ public class GameController {
 
     public int getNumberOfPlayers() {
         return players.length;
+    }
+
+    /**
+     * Accessor Method
+     * @return The GameBoard object associated with this GameController.
+     */
+    public GameBoard getGame() {
+        return game;
     }
 
     public void setInterface(GameInterface client) {
@@ -46,15 +67,15 @@ public class GameController {
 
         if (Utils.isInt(action)) {
             int col = Integer.parseInt(action);
-            int row  = game.addToken(currentPlayerToken, col);
+            boolean isWinningMove = game.addToken(currentPlayerToken, col);
 
-            if (game.getNumberOfTokens() >= game.getMaxNumberOfTokens()) {
+            if (isWinningMove) {
+                this.isRunning = false;
+                client.displayWin(currentPlayer);
+
+            } else if (game.getNumberOfTokens() >= game.getMaxNumberOfTokens()) {
                 this.isRunning = false;
                 client.displayGameOver();
-            }
-            if (game.isWinningPosition(row, col)) {
-                this.isRunning = false;
-                client.displayWin();
 
             } else {
                 this.nextPlayer(); // We only increment the pointer if we consider the input successful
