@@ -143,7 +143,7 @@ public class GameBoard {
      * @throws IllegalArgumentException When the column is not a valid index.
      */
     public boolean addToken(Token token, int col) {
-        if (col < 0 || col > width)
+        if (col < 0 || col >= width)
             throw new IllegalArgumentException(INVALID_COL_ERROR_MESSAGE);
 
         numberOfTokens++;

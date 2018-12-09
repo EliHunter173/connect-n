@@ -117,7 +117,7 @@ public class Utils {
      * @return The number of digits the given number has with the default
      *     radix.
      */
-    public static int getNumberOfDigits(int number) {
+    public static int numberOfDigits(int number) {
         int radix = DEFAULT_RADIX;
         int numberOfDigits = 1;
         int maxNumberAtCurrentDigits = radix;
@@ -135,7 +135,7 @@ public class Utils {
      * @return The number of digits the given number has with the given
      *     radix.
      */
-    public static int getNumberOfDigits(int number, int radix) {
+    public static int numberOfDigits(int number, int radix) {
         int numberOfDigits = 1;
         int maxNumberAtCurrentDigits = radix;
         while (maxNumberAtCurrentDigits < number) {
@@ -144,4 +144,5 @@ public class Utils {
         }
         return numberOfDigits;
     }
+
 }

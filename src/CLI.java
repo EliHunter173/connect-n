@@ -40,6 +40,11 @@ public class CLI implements GameInterface {
      */
     private static final String NORMAL_COLOR = Color.WHITE;
     /**
+     * The ANSI escape sequence representing the bold version
+     * of the normal color to be displayed.
+     */
+    private static final String BOLD_NORMAL_COLOR = Color.BOLD_WHITE;
+    /**
      * The character to be displayed for an empty token.
      */
     private static final char EMPTY_TOKEN_SYMBOL = 'O';
@@ -314,7 +319,7 @@ public class CLI implements GameInterface {
     public void displayBoard() {
         this.setColor(NORMAL_COLOR);
         output.println(HORIZONTAL_RULE);
-        output.println(VERTICAL_PADDING);
+        output.print(VERTICAL_PADDING);
 
         // Display Main Board
         for (int row = game.getHeight() - 1; row >= 0; row--) {
@@ -326,19 +331,35 @@ public class CLI implements GameInterface {
             output.println();
         }
 
-        // Display Column Numbers
         output.println();
-        this.setColor(NORMAL_COLOR);
-        for (int col = 0; col < game.getWidth(); col++) {
-            output.print(col);
+
+        // Display Column Numbers
+        int maxCol = game.getWidth() - 1;
+        int maxDigits = Utils.numberOfDigits(maxCol);
+
+        this.setColor(BOLD_NORMAL_COLOR);
+        for (int digitIndex = 0; digitIndex < maxDigits; digitIndex++) {
+            output.print(EXTERNAL_PADDING);
+            for (int col = 0; col < game.getWidth(); col++) {
+                String colString = Integer.toString(col);
+                try {
+                    output.print(colString.charAt(digitIndex)); // print the digit
+                } catch (StringIndexOutOfBoundsException e) {
+                    output.print(" "); // if can't print the digit, print a space
+                }
+                output.print(INTERNAL_PADDING);
+            }
+            output.println();
         }
-        output.println(VERTICAL_PADDING);
+        output.print(VERTICAL_PADDING);
     }
 
     /**
      * Runs through a single human player's turn by requesting action.
      */
     public void nextTurn() {
+        this.setColor(NORMAL_COLOR);
+
         Player currentPlayer = controller.getCurrentPlayer();
         String currentPlayerName = currentPlayer.getName();
         output.println(String.format(PLAYER_PROMPT, currentPlayerName));
