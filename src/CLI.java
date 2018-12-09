@@ -166,11 +166,7 @@ public class CLI implements GameInterface {
 
             if (tokensToConnect < GameController.MIN_TOKENS_TO_CONNECT)
                 output.println(GameController.LOW_TOKENS_ERROR_MESSAGE);
-            if (tokensToConnect > GameController.MAX_TOKENS_TO_CONNECT)
-                output.println(GameController.HIGH_TOKENS_ERROR_MESSAGE);
-
-        } while (tokensToConnect < GameController.MIN_TOKENS_TO_CONNECT ||
-                 tokensToConnect > GameController.MAX_TOKENS_TO_CONNECT);
+        } while (tokensToConnect < GameController.MIN_TOKENS_TO_CONNECT);
         return tokensToConnect;
     }
 
@@ -382,6 +378,7 @@ public class CLI implements GameInterface {
      */
     public void displayWin(Player winningPlayer) {
         this.displayBoard();
+        this.setColor(BOLD_NORMAL_COLOR);
         output.println(String.format(WIN_TEXT, winningPlayer.getName()));
     }
 
@@ -390,6 +387,7 @@ public class CLI implements GameInterface {
      */
     public void displayGameOver() {
         this.displayBoard();
+        this.setColor(BOLD_NORMAL_COLOR);
         output.println(GAME_OVER_TEXT);
     }
 
@@ -418,7 +416,8 @@ public class CLI implements GameInterface {
         int tokensToConnect = viewer.requestTokensToConnect();
         int width = viewer.requestWidth(tokensToConnect);
         int height = viewer.requestHeight(tokensToConnect);
-        GameController controller = new GameController(width, height, tokensToConnect, viewer.requestPlayers());
+        GameBoard game = new GameBoard(width, height, tokensToConnect);
+        GameController controller = new GameController(game, viewer.requestPlayers());
         viewer.setGame(controller.getGame());
 
         viewer.setController(controller);
