@@ -32,6 +32,8 @@ public interface GameInterface {
      */
     public Player[] requestPlayers();
 
+    public void displayHelp();
+
     /**
      * Displays a winning screen to the user.
      */

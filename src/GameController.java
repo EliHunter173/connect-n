@@ -4,6 +4,16 @@
  */
 public class GameController {
 
+    /**
+     * The help message that will be displayed whenever the player
+     * asks or when input isn't understood.
+     */
+    public static final String HELP_MESSAGE =
+        "Actions: #: Adds a token to the specified column.\n" +
+        "         H: Displays this help message.\n" +
+        "         D: Displays the current state of the board.\n" +
+        "         Q: Exits the program.";
+
     /** Defines the minimum amount of players allowed. */
     public static final int MIN_PLAYERS = 2;
     /**
@@ -103,33 +113,45 @@ public class GameController {
     }
 
     /**
-     * Iterates through a single turn by receiving user input and then acting
-     * on that.
+     * Adds a token to the given column. The token is owned by the current
+     * player.
+     * @param col The column to which the token should be added.
+     * @throws IllegalArgumentException If the given column is invalid for the
+     *      associated game board or if the column is full.
      */
-    public void takeTurn() {
-
+    public void addToken(int col) {
         Player currentPlayer = players[playerPointer];
         Token currentPlayerToken = new Token(currentPlayer);
 
-        String action = "";
-        // Currently, no consideration of player type is given.
-        action = client.requestUserAction();
+        boolean isWinningMove = game.addToken(currentPlayerToken, col);
 
+        if (isWinningMove) {
+            this.isRunning = false;
+            client.displayWin(currentPlayer);
+
+        } else if (game.getNumberOfTokens() >= game.getMaxNumberOfTokens()) {
+            this.isRunning = false;
+            client.displayGameOver();
+
+        } else {
+            this.nextPlayer(); // We only increment the pointer if we consider the input successful
+        }
+    }
+
+    /**
+     * Parses the given string action, adding a column if the action is parsable
+     * as an integer, and otherwise doing an action based off of the string.
+     * @param action The action string to be parsed and had action taken based
+     *     off of it.
+     * @throws IllegalArgumentException
+     *     If the action is a an integer (and therefore a column) and that
+     *     integer is not a valid column in the associated GameBoard.<br>
+     *     If the given action is not a valid, understood action.
+     */
+    private void parseAction(String action) {
         if (Utils.isInt(action)) {
             int col = Integer.parseInt(action);
-            boolean isWinningMove = game.addToken(currentPlayerToken, col);
-
-            if (isWinningMove) {
-                this.isRunning = false;
-                client.displayWin(currentPlayer);
-
-            } else if (game.getNumberOfTokens() >= game.getMaxNumberOfTokens()) {
-                this.isRunning = false;
-                client.displayGameOver();
-
-            } else {
-                this.nextPlayer(); // We only increment the pointer if we consider the input successful
-            }
+            this.addToken(col);
 
         } else {
             action = action.toUpperCase();
@@ -137,14 +159,27 @@ public class GameController {
                 case "Q":
                     System.exit(0);
                     break;
+                case "D":
+                    client.displayBoard();
+                    break;
                 case "H":
-                    throw new IllegalArgumentException("");
+                    client.displayHelp();
+                    break;
                 default:
-                    // I wish I knew how to create my own errors.
                     throw new IllegalArgumentException("Misunderstood input");
-
             }
         }
+    }
+
+    /**
+     * Iterates through a single turn by receiving user input and then acting
+     * on that.
+     */
+    public void takeTurn() {
+        // Currently, no consideration of player type is given.
+        String action = client.requestUserAction();
+
+        this.parseAction(action);
     }
 
 }

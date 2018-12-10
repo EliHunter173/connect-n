@@ -26,15 +26,6 @@ public class CLI implements GameInterface {
     };
 
     /**
-     * The help message that will be displayed whenever the player
-     * asks or when input isn't understood.
-     */
-    private static final String HELP_MESSAGE =
-        "Actions: #: Adds a token to the specified column.\n" +
-        "         H: Displays this help message.\n" +
-        "         Q: Exits the program.";
-
-    /**
      * The ANSI escape sequence representing the normal color
      * to be displayed.
      */
@@ -125,7 +116,7 @@ public class CLI implements GameInterface {
     }
 
     /** The GameController associated with this CLI. */
-    private GameController controller;
+    private GameController worker;
     /** The GameBoard this CLI is displaying. */
     private GameBoard game;
     /** The Scanner object which is used to receive user input. */
@@ -259,7 +250,7 @@ public class CLI implements GameInterface {
 
     /**
      * Sets the GameBoard associated with this CLI to the given GameBoard.
-     * @param controller The GameBoard object to be associated with this CLI.
+     * @param worker The GameBoard object to be associated with this CLI.
      */
     public void setGame(GameBoard game) {
         this.game = game;
@@ -272,7 +263,7 @@ public class CLI implements GameInterface {
      *     this CLI.
      */
     public void setController(GameController controller) {
-        this.controller = controller;
+        this.worker = controller;
     }
 
     /**
@@ -356,20 +347,26 @@ public class CLI implements GameInterface {
     public void nextTurn() {
         this.setColor(NORMAL_COLOR);
 
-        Player currentPlayer = controller.getCurrentPlayer();
+        Player currentPlayer = worker.getCurrentPlayer();
         String currentPlayerName = currentPlayer.getName();
         output.println(String.format(PLAYER_PROMPT, currentPlayerName));
 
         try {
-            controller.takeTurn();
+            worker.takeTurn();
 
         } catch (Exception e) {
-            output.println(HORIZONTAL_RULE);
             output.println(e.getMessage());
-            output.println(HELP_MESSAGE);
-            output.println();
             this.nextTurn();
         }
+    }
+
+    /**
+     * Displays the help screen.
+     */
+    public void displayHelp() {
+        this.setColor(NORMAL_COLOR);
+        output.println(HORIZONTAL_RULE);
+        output.println(GameController.HELP_MESSAGE);
     }
 
     /**
