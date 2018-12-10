@@ -9,16 +9,17 @@
 * **Shorthand:** [NOT]  (function/capability).
   * Header shows stakeholder type.
 
-* _N.B. All capabilities that the sytem has prohibited, the player has as well unless otherwise stated._
+* *N.B. All capabilities that the sytem has prohibited, the player has as well unless otherwise stated.*
 
 ### System
 
 * Add a token of any type to the lowest non-filled row of a column.
 * NOT Add a token outside of bounds.
-* NOT Remove tokens.
+* NOT Remove single tokens without emptying entire board.
 * Check if `n` tokens of the same type are in a row upon the placement of a token.
 * Declare a winner if `n` tokens of the same type are in a line, horizontally, vertically, forwards diagonally, or backwards diagonally.
-* Upon completion of game, display winner and ask if player would like to play again.
+* Upon completion of game with a winner, display winner.
+* Upon ending of the game without a winner, display a game over screen.
 * Set an arbitrary board size at the beginning of the game.
 * NOT Set board size below `n` in any direction.
 * NOT Affect board size during the game.
@@ -45,10 +46,5 @@
 * If the player is the last numerical player, the player 1 is the next player.
 
 #### 4. An end condition is met...
-* A player won by getting the specified number of tokens in a row. A win screen is displayed. On that screen, the name of the player is displayed and there are 3 options displayed: quitting, playing again with different settings, and playing again with the same settings.
-* The board was completely filled. However, no player managed to connect the required number of pieces. A game over screen is displayed. On that screen, there are 3 options displayed: quitting, playing again with different settings, and playing again with the same settings.
-
-#### 5. The players choose an option on the end screen...
-* If the players chose to quit the game, the program exits and closes whatever windows it opened.
-* If the players chose to replay the game with different settings, the program requests all that it did to start the program. The board is then begun as an empty board with the specified settings.
-* If the players chose to replay the game with the same settings, the program retains all the settings it had with the last board. The board is then begun as an empty board with the specified settings.
+* A player won by getting the specified number of tokens in a row. A win screen is displayed.
+* The board was completely filled. However, no player managed to connect the required number of pieces. A game over screen is displayed.
