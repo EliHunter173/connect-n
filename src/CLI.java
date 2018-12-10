@@ -420,6 +420,7 @@ public class CLI implements GameInterface {
         viewer.setController(controller);
         controller.setInterface(viewer);
 
+        viewer.displayHelp();
         while (controller.isRunning()) {
             viewer.displayBoard();
             viewer.nextTurn();
