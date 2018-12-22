@@ -176,8 +176,15 @@ public class GameController {
      * on that.
      */
     public void takeTurn() {
-        // Currently, no consideration of player type is given.
-        String action = client.requestUserAction();
+        String action = "";
+
+        Player currentPlayer = this.getCurrentPlayer();
+        if (currentPlayer.getPlayerType() == Player.HUMAN) {
+            action = client.requestUserAction();
+        } else {
+            int col = AI.decideColumn(currentPlayer, game);
+            action = Integer.toString(col);
+        }
 
         this.parseAction(action);
     }
