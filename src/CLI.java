@@ -5,7 +5,7 @@ import java.io.PrintStream;
  * An command line interface for Connect-N.
  * @author Eli W. Hunter
  */
-public class CLI implements GameInterface {
+public class CLI extends GameInterface {
 
     /**
      * The usage error if a misunderstood argument is given.
@@ -115,10 +115,6 @@ public class CLI implements GameInterface {
         return PLAYER_COLORS[number % PLAYER_COLORS.length];
     }
 
-    /** The GameController associated with this CLI. */
-    private GameController worker;
-    /** The GameBoard this CLI is displaying. */
-    private GameBoard game;
     /** The Scanner object which is used to receive user input. */
     private Scanner input;
     /** The PrintStream object which is used to output. */
@@ -201,17 +197,32 @@ public class CLI implements GameInterface {
     }
 
     /**
-     * Requests a single player from the user and returns that.
+     * Requests a single player, with a specified name and player type, from
+     * the user and returns that.
      * @return The user-inputted Player object.
      */
     public Player requestPlayer(int playerNumber) {
-        output.printf("Player %d's Name: ", playerNumber);
-        String name = input.next();
-        // For now, the only player type is human
-        byte playerType = Player.HUMAN;
-
         try {
+            output.printf("Player %d's Name: ", playerNumber);
+            String name = input.next();
+
+            output.println("H = human; C = computer");
+            output.printf("Player %d's Type: ", playerNumber);
+            String typeInput = input.next();
+            byte playerType;
+            switch(typeInput.toUpperCase()) {
+                case("H"):
+                    playerType = Player.HUMAN;
+                    break;
+                case("C"):
+                    playerType = Player.RANDOM_AI;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid player type.");
+            }
+
             return new Player(name, playerType);
+
         } catch (IllegalArgumentException e) {
             output.println(e.getMessage());
             return requestPlayer(playerNumber); // try again
@@ -238,32 +249,6 @@ public class CLI implements GameInterface {
         }
 
         return players;
-    }
-
-    /**
-     * Accessor Method
-     * @return The GameBoard object associated with this CLI.
-     */
-    public GameBoard getGame() {
-        return game;
-    }
-
-    /**
-     * Sets the GameBoard associated with this CLI to the given GameBoard.
-     * @param worker The GameBoard object to be associated with this CLI.
-     */
-    public void setGame(GameBoard game) {
-        this.game = game;
-    }
-
-    /**
-     * Sets the GameController associated with this CLI to the given
-     * GameController.
-     * @param controller The GameController object to be associated with
-     *     this CLI.
-     */
-    public void setController(GameController controller) {
-        this.worker = controller;
     }
 
     /**
@@ -414,8 +399,8 @@ public class CLI implements GameInterface {
         int width = viewer.requestWidth(tokensToConnect);
         int height = viewer.requestHeight(tokensToConnect);
         GameBoard game = new GameBoard(width, height, tokensToConnect);
+        viewer.setGame(game);
         GameController controller = new GameController(game, viewer.requestPlayers());
-        viewer.setGame(controller.getGame());
 
         viewer.setController(controller);
         controller.setInterface(viewer);
