@@ -67,7 +67,6 @@ public class GameBoard {
             columns[i] = new Column(height);
         }
 
-        this.numberOfTokens = 0;
         this.empty();
 
         this.tokensToConnect = tokensToConnect;
@@ -146,8 +145,11 @@ public class GameBoard {
         if (col < 0 || col >= width)
             throw new IllegalArgumentException(INVALID_COL_ERROR_MESSAGE);
 
-        numberOfTokens++;
         int row = columns[col].addToken(token);
+        // Putting this after the add token statement prevents this number from
+        // being incremented upon failure
+        numberOfTokens++;
+
         return this.isWinningPosition(row, col);
     }
 
@@ -159,6 +161,7 @@ public class GameBoard {
         for (int i = 0; i < columns.length; i++) {
             columns[i].empty();
         }
+        this.numberOfTokens = 0;
     }
 
     /**
