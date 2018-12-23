@@ -4,10 +4,10 @@
  * @author Eli W. Hunter
  */
 public class Column {
+    //TODO: Implement isFull() to determine if row is full
 
     // ERROR MESSAGES
-    // I really wish I knew how to define my own errors, so I didn't have to
-    // do this hacky stuff.
+    // TODO: Investigate custom error messages.
     /** The error message displayed when the row value is invalid.  */
     public static final String INVALID_ROW_ERROR_MESSAGE =
         "Row is out of bounds.";
@@ -16,7 +16,7 @@ public class Column {
         "Column is full";
 
     /** The maximum possible number of tokens in the Column. */
-    private final int maxTokens;
+    private final int height;
     /** The array of Token objects that make up this Column. */
     private Token[] tokens;
     /** The number of tokens currently in the Column. */
@@ -28,7 +28,7 @@ public class Column {
      *     maximum number of tokens a column can contain.
      */
     public Column(int height) {
-        this.maxTokens = height;
+        this.height = height;
         this.tokens = new Token[height];
         this.numberOfTokens = 0;
     }
@@ -37,8 +37,25 @@ public class Column {
      * Accessor Method
      * @return The max number of tokens this Column can contain.
      */
-    public int getMaxTokens() {
-        return maxTokens;
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * Accessor Method
+     * @return The row of the next token to be added.
+     */
+    public int getNextRow() {
+        return numberOfTokens;
+    }
+
+    /**
+     * Determines if the Column is full, i.e. whether it can contain any
+     * more tokens.
+     * @return True if the column is full. False otherwise.
+     */
+    public boolean isFull() {
+        return numberOfTokens >= height;
     }
 
     /**
@@ -50,7 +67,7 @@ public class Column {
      *     index for the Token Array.
      */
     public Token getToken(int row) {
-        if (row < 0 || row >= maxTokens)
+        if (row < 0 || row >= height)
             throw new IllegalArgumentException(INVALID_ROW_ERROR_MESSAGE);
 
         return tokens[row];
@@ -65,9 +82,10 @@ public class Column {
      * @return The row/index to which the Token object is added.
      */
     public int addToken(Token token) {
-        if (numberOfTokens >= maxTokens)
+        if (this.isFull())
             throw new IllegalArgumentException("Column is full");
 
+        // TODO: Refactor this so that getNextRow() is used by the gamecontroller.
         tokens[numberOfTokens] = token;
         return numberOfTokens++;
     }

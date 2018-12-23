@@ -117,6 +117,19 @@ public class GameBoard {
     }
 
     /**
+     * Finds and returns the Column at the specified column.
+     * @param col The index of the desired Column.
+     * @return The Column at the specifed index.
+     * @throws IllegalArgumentException When the specified index is not valid.
+     */
+    public Column getColumn(int col) {
+        if (col < 0 || col >= width)
+            throw new IllegalArgumentException(INVALID_COL_ERROR_MESSAGE);
+
+        return columns[col];
+    }
+
+    /**
      * Finds and returns the Token at the specified row and column.
      * @param row The row (i.e. index in the column) that the desired token is at.
      * @param col The column that the desired token is at.
@@ -125,11 +138,7 @@ public class GameBoard {
      *     index.
      */
     public Token getToken(int row, int col) {
-        // Column takes care of row
-        if (col < 0 || col >= width)
-            throw new IllegalArgumentException(INVALID_COL_ERROR_MESSAGE);
-
-        return columns[col].getToken(row);
+        return getColumn(col).getToken(row);
     }
 
     /**

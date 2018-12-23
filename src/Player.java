@@ -30,6 +30,10 @@ public class Player {
      * Defines the Random AI player type. The actual value doesn't matter as long as its consistent.
      */
     public static final byte RANDOM_AI = 1;
+    /**
+     * Defines the Simple AI player type. The actual value doesn't matter as long as its consistent.
+     */
+    public static final byte SIMPLE_AI = 2;
 
     /**
      * A Player's unique ID, which cannot be changed. This is used to determine

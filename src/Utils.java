@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.util.InputMismatchException;
+import java.util.Arrays;
+import java.util.Random;
 import java.io.PrintStream;
 
 /**
@@ -103,6 +105,52 @@ public class Utils {
                 return true;
         }
         return false;
+    }
+
+    /**
+     * Finds the largest integer in an integer array.
+     * @param array The integer array that the largest value is being found in.
+     * @return The largest integer in that array.
+     */
+    public static int max(int[] array) {
+        int max = Integer.MIN_VALUE;
+        for (int n : array) {
+            max = Math.max(max, n);
+        }
+        return max;
+    }
+
+    /**
+     * Finds the indexes of all the matches of search number within the given
+     * array.
+     * @param array[] The integer array that is being searched thrrough.
+     * @param searchNumber The integer being searched for in the array.
+     * @return An array of all of the indexes of that contain a match with the
+     *     search number.
+     */
+    public static int[] indexesOf(int[] array, int searchNumber) {
+        // The max size is the entire array being a match
+        int[] indexes = new int[array.length];
+        int indexPointer = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == searchNumber)
+                indexes[indexPointer++] = i;
+        }
+        // Reduce the size of the array to just fit the last added value
+        indexes = Arrays.copyOf(indexes, indexPointer);
+        return indexes;
+    }
+
+    /**
+     * Picks a random integer from the given array.
+     * @param array[] The integer array from which a random value is being
+     *     chosen.
+     * @return A randomly chosen integer from the given integer array.
+     */
+    public static int randomPick(int[] array) {
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(array.length);
+        return array[randomIndex];
     }
 
     /**

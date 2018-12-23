@@ -206,7 +206,7 @@ public class CLI extends GameInterface {
             output.printf("Player %d's Name: ", playerNumber);
             String name = input.next();
 
-            output.println("H = human; C = computer");
+            output.println("H = human; R = random CPU; S = simple CPU");
             output.printf("Player %d's Type: ", playerNumber);
             String typeInput = input.next();
             byte playerType;
@@ -214,8 +214,11 @@ public class CLI extends GameInterface {
                 case("H"):
                     playerType = Player.HUMAN;
                     break;
-                case("C"):
+                case("R"):
                     playerType = Player.RANDOM_AI;
+                    break;
+                case("S"):
+                    playerType = Player.SIMPLE_AI;
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid player type.");
