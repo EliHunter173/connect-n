@@ -23,7 +23,7 @@ public class AI {
     public static final int RADIUS = 1;
     /**
      * Determines how many points a match with a distance given by the index
-     * is worth.
+     * is worth. This must have RADIUS + 1 ({@value #RADIUS + 1}) entries.
      */
     public static final int[] DISTANCE_POINTS = {0, 1};
     /**
