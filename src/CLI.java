@@ -203,6 +203,8 @@ public class CLI extends GameInterface {
      */
     public Player requestPlayer(int playerNumber) {
         try {
+            output.println();
+
             output.printf("Player %d's Name: ", playerNumber);
             String name = input.next();
 
