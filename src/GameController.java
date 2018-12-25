@@ -35,7 +35,9 @@ public class GameController {
     /** The GameInterface object connected to this GameController. */
     private GameInterface client;
     /** The GameBoard object connected to this GameController. */
-    private GameBoard game;
+    private GameBoard board;
+    /** The AI object connected to this GameController. */
+    private AI ai;
     /**
      * The list of the players that this GameController is in charge of
      * controlling and managing.
@@ -49,14 +51,17 @@ public class GameController {
     /**
      * Creates a GameController object with an associated GameBoard and
      * of players.
-     * @param game The GameBoard object that this GameController controls.
+     * @param board The GameBoard object that this GameController controls.
      * @param players[] The array of players that this GameController controls.
      */
-    public GameController(GameBoard game, Player[] players) {
+    public GameController(GameBoard board, Player[] players) {
         if (players.length < MIN_PLAYERS)
             throw new IllegalArgumentException(LOW_PLAYERS_ERROR_MESSAGE);
 
-        this.game = game;
+        this.board = board;
+
+        this.ai = new AI(board);
+
         this.players = players;
         this.playerPointer = 0;
         this.isRunning = true;
@@ -85,7 +90,7 @@ public class GameController {
      * @return The GameBoard object associated with this GameController.
      */
     public GameBoard getGame() {
-        return game;
+        return board;
     }
 
     /**
@@ -123,13 +128,13 @@ public class GameController {
         Player currentPlayer = players[playerPointer];
         Token currentPlayerToken = new Token(currentPlayer);
 
-        boolean isWinningMove = game.addToken(currentPlayerToken, col);
+        boolean isWinningMove = board.addToken(currentPlayerToken, col);
 
         if (isWinningMove) {
             this.isRunning = false;
             client.displayWin(currentPlayer);
 
-        } else if (game.getNumberOfTokens() >= game.getMaxNumberOfTokens()) {
+        } else if (board.getNumberOfTokens() >= board.getMaxNumberOfTokens()) {
             this.isRunning = false;
             client.displayGameOver();
 
@@ -176,14 +181,13 @@ public class GameController {
      * on that.
      */
     public void takeTurn() {
-        String action = "";
+        String action;
 
         Player currentPlayer = this.getCurrentPlayer();
         if (currentPlayer.getPlayerType() == Player.HUMAN) {
             action = client.requestUserAction();
         } else {
-            int col = AI.decideColumn(currentPlayer, game);
-            action = Integer.toString(col);
+            action = ai.decideAction(currentPlayer);
         }
 
         this.parseAction(action);
