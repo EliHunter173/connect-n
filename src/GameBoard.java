@@ -6,9 +6,10 @@ import java.util.*; // For Arrays
  */
 public class GameBoard {
 
+    /** The minimum length of a sequence to be checked. */
+    public static final int MIN_SEQUENCE_LENGTH = 2;
+
     // ERROR MESSAGES
-    // I really wish I knew how to define my own errors, so I didn't have to
-    // do this hacky stuff.
     /**
      * The error message displayed when the width is less than the number
      * of tokens to connect.
@@ -24,6 +25,8 @@ public class GameBoard {
     /** The error message displayed when the column value is invalid.  */
     public static final String INVALID_COL_ERROR_MESSAGE =
         "Column is out of bounds.";
+    public static final String INVALID_LENGTH_ERROR_MESSAGE =
+        "The length must be creater than " + MIN_SEQUENCE_LENGTH;
 
     /** The (permanent) width of the GameBoard. (i.e. The number of columns.) */
     private final int width;
@@ -54,10 +57,12 @@ public class GameBoard {
      *     less than the number of tokens to connect.
      */
     public GameBoard(int width, int height, int tokensToConnect) {
-        if (width < tokensToConnect)
+        if (width < tokensToConnect) {
             throw new IllegalArgumentException(INVALID_WIDTH_ERROR_MESSAGE);
-        if (height < tokensToConnect)
+        }
+        if (height < tokensToConnect) {
             throw new IllegalArgumentException(INVALID_HEIGHT_ERROR_MESSAGE);
+        }
 
         this.width = width;
         this.columns = new Column[width];
@@ -151,8 +156,9 @@ public class GameBoard {
      * @throws IllegalArgumentException When the column is not a valid index.
      */
     public boolean addToken(Token token, int col) {
-        if (col < 0 || col >= width)
+        if (col < 0 || col >= width) {
             throw new IllegalArgumentException(INVALID_COL_ERROR_MESSAGE);
+        }
 
         int row = columns[col].addToken(token);
         // Putting this after the add token statement prevents this number from
@@ -160,6 +166,25 @@ public class GameBoard {
         numberOfTokens++;
 
         return this.isWinningPosition(row, col);
+    }
+
+    /**
+     * Adds the specified token to the specified column by calling the removeToken()
+     * method on that Column.
+     * @param col The index of the Column which will receive this Token.
+     * @return True if the added token is part of a winning sequence. False
+     *     otherwise.
+     * @throws IllegalArgumentException When the column is not a valid index.
+     */
+    public void removeToken(int col) {
+        if (col < 0 || col >= width) {
+            throw new IllegalArgumentException(INVALID_COL_ERROR_MESSAGE);
+        }
+
+        columns[col].removeToken();
+        // Putting this after the add token statement prevents this number from
+        // being decremented upon failure
+        numberOfTokens--;
     }
 
     /**
@@ -193,75 +218,111 @@ public class GameBoard {
         if (col < 0 || col > width)
             throw new IllegalArgumentException(INVALID_COL_ERROR_MESSAGE);
 
-        return checkVertical(row, col)
-               || checkHorizontal(row, col)
-               || checkPositiveDiagonal(row, col)
-               || checkNegativeDiagonal(row, col);
+        return checkVerticalSequence(row, col, this.tokensToConnect)
+               || checkHorizontalSequence(row, col, this.tokensToConnect)
+               || checkPositiveDiagonalSequence(row, col, this.tokensToConnect)
+               || checkNegativeDiagonalSequence(row, col, this.tokensToConnect);
     }
 
-    // Submethods of isWinningPosition()
     /**
-     * Checks if the given row and column is part of any winning sequence in
-     * the vertical direction.<br>
+     * Checks if the given row and column is part of any winning sequences of
+     * the given length. That is, if the position is part of a sequence in
+     * either the vertical, horizontal, positive diagonal, or negative diagonal
+     * direction
+     * @param row The row to be checked to see if it is part of any winning
+     *     sequences.
+     * @param col The column to be checked to see if it is part of any winning
+     *     sequences.
+     * @param length The length of the sequence to be checked.
+     * @return True if the row and column are part of any winning sequences of
+     *     the given lenth. False otherwise.
+     * @throws IllegalArgumentException When the row or column value is not a
+     *     valid value (i.e. less than 0 and greater than the width or height).
+     *     Or when the length is less than the minimum.
+     */
+    public boolean hasSequence(int row, int col, int length) {
+        if (row < 0 || row > height) {
+            throw new IllegalArgumentException(Column.INVALID_ROW_ERROR_MESSAGE);
+        }
+        if (col < 0 || col > width) {
+            throw new IllegalArgumentException(INVALID_COL_ERROR_MESSAGE);
+        }
+        if (length < MIN_SEQUENCE_LENGTH) {
+            throw new IllegalArgumentException(INVALID_LENGTH_ERROR_MESSAGE);
+        }
+
+        return checkVerticalSequence(row, col, length)
+               || checkHorizontalSequence(row, col, length)
+               || checkPositiveDiagonalSequence(row, col, length)
+               || checkNegativeDiagonalSequence(row, col, length);
+    }
+
+    /**
+     * Checks if the given row and column is part of any sequence of the given
+     * length in the vertical direction.<br>
      * Precondition: The row and column are valid.
-     * @param row The row to be checked to see if it is part of a vertical winning
-     *     sequence.
+     * @param row The row to be checked to see if it is part of a vertical
+     *     winning sequence.
      * @param col The column to be checked to see if it is part of a vertical
      *     winning sequence.
+     * @param length The length of the vertical sequence to be checked.
      * @return True if the row and column are part of a vertical winning sequence.
      *     False otherwise.
      */
-    public boolean checkVertical(int row, int col) {
+    public boolean checkVerticalSequence(int row, int col, int length) {
         // i.e. |. row is variable. col is constant.
-        return checkSequence(row, col, 1, 0, tokensToConnect);
+        return checkSequence(row, col, 1, 0, length);
     }
 
     /**
-     * Checks if the given row and column is part of any winning sequence in
-     * the horizontal direction.<br>
+     * Checks if the given row and column is part of any sequence of the given
+     * length in the horizontal direction.<br>
      * Precondition: The row and column are valid.
-     * @param row The row to be checked to see if it is part of a horizontal winning
-     *     sequence.
+     * @param row The row to be checked to see if it is part of a horizontal
+     *     winning sequence.
      * @param col The column to be checked to see if it is part of a horizontal
      *     winning sequence.
+     * @param length The length of the horizontal sequence to be checked.
      * @return True if the row and column are part of a horizontal winning sequence.
      *     False otherwise.
      */
-    public boolean checkHorizontal(int row, int col) {
-        // i.e. |. row is constant. col is variable.
-        return checkSequence(row, col, 0, 1, tokensToConnect);
+    public boolean checkHorizontalSequence(int row, int col, int length) {
+        // i.e. -. col is variable. row is constant.
+        return checkSequence(row, col, 0, 1, length);
     }
 
     /**
-     * Checks if the given row and column is part of any winning sequence in
-     * the postitive diagonal direction.<br>
+     * Checks if the given row and column is part of any sequence of the given
+     * length in the positive diagonal direction.<br>
      * Precondition: The row and column are valid.
-     * @param row The row to be checked to see if it is part of a postitive diagonal
-     *     winning sequence.
-     * @param col The column to be checked to see if it is part of a positive diagonal
-     *     winning sequence.
-     * @return True if the row and column are part of a positive diagonal winning sequence.
-     *     False otherwise.
+     * @param row The row to be checked to see if it is part of a positive
+     *     diagonal winning sequence.
+     * @param col The column to be checked to see if it is part of a positive
+     *     diagonal winning sequence.
+     * @param length The length of the positive diagonal sequence to be checked.
+     * @return True if the row and column are part of a positive diagonal
+     *     winning sequence.  False otherwise.
      */
-    public boolean checkPositiveDiagonal(int row, int col) {
-        // i.e. /. row is increasing, col is increasing.
-        return checkSequence(row, col, 1, 1, tokensToConnect);
+    public boolean checkPositiveDiagonalSequence(int row, int col, int length) {
+        // i.e. /. row is increasing. col is increasing.
+        return checkSequence(row, col, 1, 1, length);
     }
 
     /**
-     * Checks if the given row and column is part of any winning sequence in
-     * the negative diagonal direction.<br>
+     * Checks if the given row and column is part of any sequence of the given
+     * length in the negative diagonal direction.<br>
      * Precondition: The row and column are valid.
-     * @param row The row to be checked to see if it is part of a negative diagonal
-     *     winning sequence.
-     * @param col The column to be checked to see if it is part of a negative diagonal
-     *     winning sequence.
-     * @return True if the row and column are part of a negative diagonal winning sequence.
-     *     False otherwise.
+     * @param row The row to be checked to see if it is part of a negative
+     *     diagonal winning sequence.
+     * @param col The column to be checked to see if it is part of a negative
+     *     diagonal winning sequence.
+     * @param length The length of the negative diagonal sequence to be checked.
+     * @return True if the row and column are part of a negative diagonal
+     *     winning sequence.  False otherwise.
      */
-    public boolean checkNegativeDiagonal(int row, int col) {
-        // i.e. \. row is increasing. col is increasing.
-        return checkSequence(row, col, 1, -1, tokensToConnect);
+    public boolean checkNegativeDiagonalSequence(int row, int col, int length) {
+        // i.e. \. row is increasing. col is decreasing.
+        return checkSequence(row, col, 1, -1, length);
     }
 
     /**
@@ -325,8 +386,9 @@ public class GameBoard {
                     badSequence = true;
                 }
 
-                if (badSequence)
+                if (badSequence) {
                     break; // give up on this sequence
+                }
 
             }
             if (!badSequence) {
@@ -336,6 +398,5 @@ public class GameBoard {
         }
         return false; // a good sequence was never found
     }
-    // End submethods of isWinningPosition()
 
 }

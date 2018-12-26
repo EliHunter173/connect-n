@@ -10,12 +10,12 @@ they are full or whether or the current board state.
 This AI maximizes the number of the player's tokens within a given square
 radius, defined by a class constant.
 
-## Non-competitive AI
+## Intelligent AI
 
 This AI maximizes the length of the sequence of the player's tokens that can be
 created from adding a token.
 
-## Annoying AI
+## Belligerent AI
 
 This AI minimizes the length of a sequence of other players tokens.
 

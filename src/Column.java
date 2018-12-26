@@ -91,6 +91,17 @@ public class Column {
     }
 
     /**
+     * Remove a token from the highest filled row of the Column.
+     */
+    public void removeToken() {
+        if (numberOfTokens <= 0) {
+            throw new IllegalArgumentException("An empty column cannot have tokens removed");
+        }
+
+        tokens[--numberOfTokens] = Token.EMPTY;
+    }
+
+    /**
      * Fills the row with empty tokens (Token.EMPTY objects).
      */
     public void empty() {

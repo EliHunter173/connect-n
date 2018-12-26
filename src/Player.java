@@ -34,6 +34,10 @@ public class Player {
      * Defines the Simple AI player type. The actual value doesn't matter as long as its consistent.
      */
     public static final byte SIMPLE_AI = 2;
+    /**
+     * Defines the Intelligent AI player type. The actual value doesn't matter as long as its consistent.
+     */
+    public static final byte INTELLIGENT_AI = 3;
 
     /**
      * A Player's unique ID, which cannot be changed. This is used to determine

@@ -193,4 +193,47 @@ public class Utils {
         return numberOfDigits;
     }
 
+    /**
+     * Creates an integer array from zero, inclusive, up to the given number,
+     * exclusive.
+     * @param max The highest number that will be excluded.
+     * @return The range of numbers from zero up to the given max.
+     */
+    public static int[] range(int max) {
+        int[] numbers = new int[max];
+        for (int i = 0; i < max; i++) {
+            numbers[i] = i;
+        }
+        return numbers;
+    }
+
+    /**
+     * Returns the given object array that only contains the objects where the
+     * corresponding value in the boolean array is true.
+     * @param numbers The object array that will have some of its items
+     *     returned where the corresponding boolean values are true.
+     * @param booleans The boolean array that has the values which determine
+     *     whether an object will be included in the returned array.
+     * @throws IllegalArgumentException When the object array and boolean array
+     *     are not of the same length.
+     */
+    public static int[] filter(int[] numbers, boolean[] booleans) {
+        if (numbers.length != booleans.length) {
+            throw new IllegalArgumentException(
+                    "Two arrays must be of the same length to filter each other");
+        }
+
+        int pointer = 0;
+        int[] newNumbers = new int[numbers.length];
+        for (int i = 0; i < numbers.length; i++) {
+            if (booleans[i]) {
+                newNumbers[pointer++] = numbers[i];
+            }
+        }
+        // Reduce the length to the number added
+        newNumbers = Arrays.copyOf(newNumbers, pointer);
+
+        return newNumbers;
+    }
+
 }

@@ -18,6 +18,11 @@ public class AI {
      * with the same board.
      */
     public SimpleAI simpleAI;
+    /**
+     * The associated intelligent AI object with this AI object. It is associated
+     * with the same board.
+     */
+    public IntelligentAI intelligentAI;
 
     /**
      * Creates this AI object that simply contains its specific children AI
@@ -26,6 +31,7 @@ public class AI {
     public AI(GameBoard board) {
         this.randomAI = new RandomAI(board);
         this.simpleAI = new SimpleAI(board);
+        this.intelligentAI = new IntelligentAI(board);
     }
 
     /**
@@ -41,6 +47,8 @@ public class AI {
             return randomAI.decideAction();
         } else if (player.getPlayerType() == Player.SIMPLE_AI) {
             return simpleAI.decideAction(player);
+        } else if (player.getPlayerType() == Player.INTELLIGENT_AI) {
+            return intelligentAI.decideAction(player);
         } else {
             throw new IllegalArgumentException("Invalid player type");
         }
@@ -54,7 +62,7 @@ public class AI {
 
         /**
          * The game board that the AI uses to determine the bounds for the
-         * randomColumn() method.
+         * decideAction() method.
          */
         public GameBoard board;
         /**
@@ -63,7 +71,7 @@ public class AI {
         public Random rand;
 
         /**
-         * Creates a SimpleAI that is associated with a given game board.
+         * Creates a random AI that is associated with a given game board.
          * @param board The game board that this AI is associated with.
          */
         public RandomAI(GameBoard board) {
@@ -105,10 +113,21 @@ public class AI {
          */
         public GameBoard board;
 
+        /**
+         * Creates a simple AI that is associated with a given game board.
+         * @param board The game board that this AI is associated with.
+         */
         public SimpleAI(GameBoard board) {
             this.board = board;
         }
 
+        /**
+         * Scores each column by how many tokens of the given player's type are
+         * in the constant radius ({@value #RADIUS}) and then randomly chooses
+         * from the highest scored column.
+         * @return The highest score column if there is a single column with the
+         *     highest score. If there is tie, a randomly chosen one.
+         */
         public String decideAction(Player player) {
             int[] scores = scoreColumns(player);
             int highestScore = Utils.max(scores);
@@ -185,6 +204,63 @@ public class AI {
             int colDistance = Math.abs(deltaCol);
             int distance = Math.max(rowDistance, colDistance);
             return DISTANCE_POINTS[distance];
+        }
+
+    }
+
+    private class IntelligentAI {
+
+        /** What checking sequence length the AI should start from. */
+        private static final int STARTING_CHECK_LENGTH = 2;
+        /**
+         * The game board that the AI uses to determine the bounds for the
+         * decideAction() method.
+         */
+        public GameBoard board;
+
+        /**
+         * Creates an intelligent AI that is associated with a given game board.
+         * @param board The game board that this AI is associated with.
+         */
+        public IntelligentAI(GameBoard board) {
+            this.board = board;
+        }
+
+        public String decideAction(Player player) {
+            int[] columns = Utils.range(board.getWidth());
+            columns = decideColumns(player, columns, STARTING_CHECK_LENGTH);
+            int chosenColumn = Utils.randomPick(columns);
+
+            return Integer.toString(chosenColumn);
+        }
+
+        public int[] decideColumns(Player player, int[] columns, int checkLength) {
+            Token playerToken = new Token(player);
+
+            // Filter by finding which of the given columns pass the check
+            // length
+            boolean[] hasSequenceLength = new boolean[columns.length];
+            for (int i = 0; i < columns.length; i++) {
+                int col = columns[i];
+                int row = board.getColumn(col).getNextRow();
+
+                try {
+                    board.addToken(playerToken, col);
+                    hasSequenceLength[i] = board.hasSequence(row, col, checkLength);
+                    board.removeToken(col);
+                } catch (IllegalArgumentException e) {
+                    // If anything fails, it's a bad column
+                    hasSequenceLength[i] = false;
+                }
+            }
+            int[] goodColumns = Utils.filter(columns, hasSequenceLength);
+
+            if (goodColumns.length == 0) {
+                // If this round gave nothing, the last round was good
+                return columns;
+            } else {
+                return decideColumns(player, goodColumns, checkLength + 1);
+            }
         }
 
     }

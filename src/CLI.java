@@ -27,7 +27,7 @@ public class CLI extends GameInterface {
 
     /** The ANSI escape sequence representing the normal color to be
      *  displayed. */
-    private static final ANSIColor NORMAL_COLOR = ANSIColor.RESET;
+    private static final ANSIColor NORMAL_COLOR = new ANSIColor(ANSIColor.WHITE, ANSIColor.BLACK);
     /**
      * The ANSI escape sequence representing the bold version
      * of the normal color to be displayed.
@@ -207,7 +207,7 @@ public class CLI extends GameInterface {
             output.printf("Player %d's Name: ", playerNumber);
             String name = input.next();
 
-            output.println("H = human; R = random CPU; S = simple CPU");
+            output.println("H = human; R = random CPU; S = simple CPU; I = intelligent CPU");
             output.printf("Player %d's Type: ", playerNumber);
             String typeInput = input.next();
             byte playerType;
@@ -220,6 +220,9 @@ public class CLI extends GameInterface {
                     break;
                 case("S"):
                     playerType = Player.SIMPLE_AI;
+                    break;
+                case("I"):
+                    playerType = Player.INTELLIGENT_AI;
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid player type.");

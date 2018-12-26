@@ -43,6 +43,8 @@ public class ANSIColor {
     /** The ANSI code representing the color white. */
     public static final int WHITE =   7;
 
+    /** The ANSI code representing normal text. */
+    public static final int NORMAL = 0;
     /** The ANSI code representing bold text. */
     public static final int BOLD = 1;
     /** The ANSI code representing underlined text. */
@@ -52,20 +54,8 @@ public class ANSIColor {
     /** The ANSI code representing concealed text. */
     public static final int CONCEAL = 8;
 
-    /** The ANSI code that resets the terminal to its normal state. */
-    public static final ANSIColor RESET = new ANSIColor("0");
-
     /** The string that stores the ANSI sequence for the given color object. */
     private String ansiSequence;
-
-    /**
-     * Creates a ANSI color object with the given codes verbatim with no checks.
-     * This should not be regularly used.
-     * @param ansiSequence The internal code(s) of the graphical ANSI sequence.
-     */
-    public ANSIColor(String codes) {
-        this.ansiSequence = ESCAPE_SEQUENCE + codes + GRAPHICS_END;
-    }
 
     /**
      * Creates an ANSI color with the given ANSI color code for the foreground
@@ -87,8 +77,13 @@ public class ANSIColor {
 
         // Parse the extra color codes
         String parsedExtraCodes = "";
-        for (int code : extraCodes) {
-            parsedExtraCodes += DELIMITER + code;
+        if (extraCodes.length == 0) {
+            // If no special code is given, specify normal text
+            parsedExtraCodes += DELIMITER + NORMAL;
+        } else {
+            for (int code : extraCodes) {
+                parsedExtraCodes += DELIMITER + code;
+            }
         }
 
         this.ansiSequence = ESCAPE_SEQUENCE +
