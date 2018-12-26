@@ -18,7 +18,7 @@ added and changed so much that this project is now no longer within the bounds o
 
 ```shell
 # Clone the repository
-git clone https://github.com/EliHunter173/connect-n
+git clone https://github.com/EliHunter173/connect-n.git
 
 # In the repository, compile the source code
 cd connect-n
