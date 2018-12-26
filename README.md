@@ -1,4 +1,4 @@
-# Connect-N
+# Connect N
 
 This project is a fork of a project at my university; I considered it interesting enough to copy it
 over to my own personal account for further development.

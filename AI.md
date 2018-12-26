@@ -1,7 +1,5 @@
 # AI Types
 
-This is a description of all of the different type of AIs and their methodology.
-
 ## Random AI
 
 This AI randomly places tokens at valid columns, not considering whether or not
@@ -16,6 +14,10 @@ radius, defined by a class constant.
 
 This AI maximizes the length of the sequence of the player's tokens that can be
 created from adding a token.
+
+## Annoying AI
+
+This AI minimizes the length of a sequence of other players tokens.
 
 ## Competitive AI
 
