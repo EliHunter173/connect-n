@@ -25,16 +25,14 @@ public class CLI extends GameInterface {
         "--no-color",
     };
 
-    /**
-     * The ANSI escape sequence representing the normal color
-     * to be displayed.
-     */
-    private static final String NORMAL_COLOR = Color.WHITE;
+    /** The ANSI escape sequence representing the normal color to be
+     *  displayed. */
+    private static final ANSIColor NORMAL_COLOR = ANSIColor.RESET;
     /**
      * The ANSI escape sequence representing the bold version
      * of the normal color to be displayed.
      */
-    private static final String BOLD_NORMAL_COLOR = Color.BOLD_WHITE;
+    private static final ANSIColor BOLD_NORMAL_COLOR = new ANSIColor(ANSIColor.WHITE, ANSIColor.BLACK, ANSIColor.BOLD);
     /**
      * The character to be displayed for an empty token.
      */
@@ -50,13 +48,13 @@ public class CLI extends GameInterface {
      * colors a player can have and the order in which they will be cycled
      * through.
      */
-    private static final String[] PLAYER_COLORS = {
-        Color.BOLD_RED,
-        Color.BOLD_GREEN,
-        Color.BOLD_BLUE,
-        Color.BOLD_MAGENTA,
-        Color.BOLD_YELLOW,
-        Color.BOLD_CYAN,
+    private static final ANSIColor[] PLAYER_COLORS = {
+        new ANSIColor(ANSIColor.RED,     ANSIColor.BLACK, ANSIColor.BOLD),
+        new ANSIColor(ANSIColor.GREEN,   ANSIColor.BLACK, ANSIColor.BOLD),
+        new ANSIColor(ANSIColor.BLUE,    ANSIColor.BLACK, ANSIColor.BOLD),
+        new ANSIColor(ANSIColor.MAGENTA, ANSIColor.BLACK, ANSIColor.BOLD),
+        new ANSIColor(ANSIColor.YELLOW,  ANSIColor.BLACK, ANSIColor.BOLD),
+        new ANSIColor(ANSIColor.CYAN,    ANSIColor.BLACK, ANSIColor.BOLD),
     };
 
     /**
@@ -104,6 +102,7 @@ public class CLI extends GameInterface {
      */
     private static final int FIRST_PLAYER_NUMBER = 1;
 
+    // TODO: Refactor this so it works off of player objects
     /**
      * Returns a color based off of the modulus of the inputted number
      * and the length of the player colors array.
@@ -111,7 +110,7 @@ public class CLI extends GameInterface {
      * @return The ANSI control sequence representing the given color
      *     from the player colors array.
      */
-    public static String getColor(int number) {
+    public static ANSIColor getColor(int number) {
         return PLAYER_COLORS[number % PLAYER_COLORS.length];
     }
 
@@ -262,9 +261,10 @@ public class CLI extends GameInterface {
      * in color.
      * @param color The ANSI escape sequence for the desired color.
      */
-    public void setColor(String color) {
-        if (inColor)
+    public void setColor(ANSIColor color) {
+        if (inColor) {
             output.print(color);
+        }
     }
 
     /**
@@ -280,7 +280,7 @@ public class CLI extends GameInterface {
             output.print(EMPTY_TOKEN_SYMBOL);
 
         } else {
-            String playerColor = getColor(owner.getId());
+            ANSIColor playerColor = getColor(owner.getId());
             this.setColor(playerColor);
 
             char playerSymbol = owner.getName().charAt(NAME_SYMBOL_INDEX);
