@@ -38,10 +38,8 @@ public class GameController {
     private GameBoard board;
     /** The AI object connected to this GameController. */
     private AI ai;
-    /**
-     * The list of the players that this GameController is in charge of
-     * controlling and managing.
-     */
+    /** The list of the players that this GameController is in charge of controlling and
+     * managing. */
     private Player[] players;
     /** The index of / pointer to the current player in the players array. */
     private int playerPointer;
@@ -60,7 +58,7 @@ public class GameController {
 
         this.board = board;
 
-        this.ai = new AI(board);
+        this.ai = new AI(board, players);
 
         this.players = players;
         this.playerPointer = 0;

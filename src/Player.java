@@ -22,22 +22,21 @@ public class Player {
         idCounter = 0;
     }
 
-    /**
-     * Defines the Human player type. The actual value doesn't matter as long as its consistent.
-     */
+    /** Defines the Human player type. The actual value doesn't matter as long as its
+     * consistent. */
     public static final byte HUMAN = 0;
-    /**
-     * Defines the Random AI player type. The actual value doesn't matter as long as its consistent.
-     */
+    /** Defines the Random AI player type. The actual value doesn't matter as long as its
+     * consistent. */
     public static final byte RANDOM_AI = 1;
-    /**
-     * Defines the Simple AI player type. The actual value doesn't matter as long as its consistent.
-     */
+    /** Defines the Simple AI player type. The actual value doesn't matter as long as its
+     * consistent. */
     public static final byte SIMPLE_AI = 2;
-    /**
-     * Defines the Intelligent AI player type. The actual value doesn't matter as long as its consistent.
-     */
+    /** Defines the Intelligent AI player type. The actual value doesn't matter as long as its
+     * consistent. */
     public static final byte INTELLIGENT_AI = 3;
+    /** Defines the Competitive AI player type. The actual value doesn't matter as long as its
+     * consistent. */
+    public static final byte COMPETITIVE_AI = 4;
 
     /**
      * A Player's unique ID, which cannot be changed. This is used to determine

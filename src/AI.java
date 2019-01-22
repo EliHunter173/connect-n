@@ -3,35 +3,35 @@ import java.util.Random; // For RandomAI
 /**
  * A class which contains and calls upon all of its children AI classes
  * as required to control a player on a specific game board, based off
- * the player's AI difficulty.
+ * the player's AI type.
  * @author Eli W. Hunter
  */
 public class AI {
 
-    /**
-     * The associated random AI object with this AI object. It is associated
-     * with the same board.
-     */
-    public RandomAI randomAI;
-    /**
-     * The associated simple AI object with this AI object. It is associated
-     * with the same board.
-     */
-    public SimpleAI simpleAI;
-    /**
-     * The associated intelligent AI object with this AI object. It is associated
-     * with the same board.
-     */
-    public IntelligentAI intelligentAI;
+    /** The associated random AI object with this AI object. It is associated with the same
+     * board. */
+    private RandomAI randomAI;
+    /** The associated simple AI object with this AI object. It is associated with the same
+     * board. */
+    private SimpleAI simpleAI;
+    /** The associated intelligent AI object with this AI object. It is associated with the same
+     * board. */
+    private IntelligentAI intelligentAI;
+    /** The associated competitive AI object with this AI object. It is associated with the same
+     * board. */
+    private CompetitiveAI competitiveAI;
+    /** The list of the players that are participating in the game that this AI is controlling. */
+    private Player[] players;
 
     /**
      * Creates this AI object that simply contains its specific children AI
      * objects.
      */
-    public AI(GameBoard board) {
+    public AI(GameBoard board, Player[] players) {
         this.randomAI = new RandomAI(board);
         this.simpleAI = new SimpleAI(board);
         this.intelligentAI = new IntelligentAI(board);
+        this.competitiveAI = new CompetitiveAI(board, players);
     }
 
     /**
@@ -49,13 +49,16 @@ public class AI {
             return simpleAI.decideAction(player);
         } else if (player.getPlayerType() == Player.INTELLIGENT_AI) {
             return intelligentAI.decideAction(player);
+        } else if (player.getPlayerType() == Player.COMPETITIVE_AI) {
+            return intelligentAI.decideAction(player);
         } else {
             throw new IllegalArgumentException("Invalid player type");
         }
     }
 
     /**
-     * The AI for players with the Player.RANDOM_AI type.
+     * The AI for players with the Player.RANDOM_AI type. This AI returns a random column index in
+     * the range of the GameBoard.
      * @author Eli W. Hunter
      */
     private class RandomAI {
@@ -64,11 +67,11 @@ public class AI {
          * The game board that the AI uses to determine the bounds for the
          * decideAction() method.
          */
-        public GameBoard board;
+        private GameBoard board;
         /**
          * Random number generator used for the random number generation in this AI.
          */
-        public Random rand;
+        private Random rand;
 
         /**
          * Creates a random AI that is associated with a given game board.
@@ -91,27 +94,25 @@ public class AI {
 
     }
 
+    /**
+     * The AI for players with the Player.SIMPLE_AI type. This AI tries to maximize the number of
+     * its tokens that are adjacent to each other.
+     * @author Eli W. Hunter
+     */
     private class SimpleAI {
-        /**
-         * How far to the left and right and up and down the AI should check when
-         * scoring columns.
-         */
+        /** How far to the left and right and up and down the AI should check when scoring
+         * columns. */
         private final int RADIUS = 1;
-        /**
-         * Determines how many points a match with a distance given by the index
-         * is worth. This must have RADIUS + 1 ({@value #RADIUS + 1}) entries.
-         */
+        /** Determines how many points a match with a distance given by the index is worth. This
+          must have RADIUS + 1 ({@value #RADIUS + 1}) entries. */
         private final int[] DISTANCE_POINTS = {0, 1};
-        /**
-         * Determines how many points a full column should be given.
-         */
+        /** Determines how many points a full column should be given. */
         private final int FULL_COLUMN_SCORE = -1;
 
-        /**
-         * The game board that the AI uses to determine the bounds for the
-         * randomColumn() method.
-         */
-        public GameBoard board;
+        /** The game board that the AI uses to find the maximum number of adjacent tokens for the
+         * given player. It is also used the bounds for the {@link #decideColumns(Player, int[],
+         * int)}. */
+        private GameBoard board;
 
         /**
          * Creates a simple AI that is associated with a given game board.
@@ -208,15 +209,18 @@ public class AI {
 
     }
 
+    /**
+     * The AI for players with the Player.INTELLIGENT_AI type. This AI maximizes the length of its
+     * own sequences, without any regard to other Player's tokens.
+     * @author Eli W. Hunter
+     */
     private class IntelligentAI {
 
         /** What checking sequence length the AI should start from. */
         private static final int STARTING_CHECK_LENGTH = 2;
-        /**
-         * The game board that the AI uses to determine the bounds for the
-         * decideAction() method.
-         */
-        public GameBoard board;
+        /** The game board that the AI uses to find the maximum token sequence for the given player.
+         * It is also used the bounds for the {@link #decideColumns(Player, int[], int)}. */
+        private GameBoard board;
 
         /**
          * Creates an intelligent AI that is associated with a given game board.
@@ -263,6 +267,22 @@ public class AI {
             }
         }
 
+    }
+
+    private class CompetitiveAI {
+
+        /** The game board that the AI uses to min/max the sequence of tokens for other players and
+         * for itself. It is also used the bounds for the {@link #decideColumns(Player, int[],
+         * int)}. */
+        private GameBoard board;
+        /** The list of all players that are participating in the game that the AI is
+         * controlling. */
+        private Player[] players;
+
+        public CompetitiveAI(GameBoard board, Player[] players) {
+            this.board = board;
+            this.players = players;
+        }
     }
 
 }
